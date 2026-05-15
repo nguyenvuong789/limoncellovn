@@ -1,0 +1,2209 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Limoncello — Design Proposal Demo 3</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600;1,700&family=Raleway:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+/* ═══════════════════════════════════════════
+   DESIGN TOKENS
+═══════════════════════════════════════════ */
+:root {
+  --lemon:       #F2C12E;
+  --lemon-deep:  #C99A0A;   /* use for text on light bg – WCAG AA compliant */
+  --lemon-light: #FDF5C7;
+  --lemon-pale:  #FEFAE8;
+  --green:       #0F0F0F;   /* remapped → near-black primary */
+  --green-mid:   #1C1C1C;   /* remapped → charcoal secondary */
+  --green-light: #3D6B50;   /* NEW — lighter green accent touches */
+  --green-pale:  #E8F0EC;   /* NEW — very subtle green tint bg */
+  --cream:       #FEF6E4;
+  --warm-white:  #FFFDF6;
+  --charcoal:    #1C1C1C;
+  --text-body:   #1A1A1A;
+  --text-muted:  #6A5E50;
+
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-body:    'Raleway', sans-serif;
+  --ease-out:     cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+  --nav-h: 68px;
+}
+
+/* ═══════════════════════════════════════════
+   RESET
+═══════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: var(--font-body); color: var(--text-body); background: var(--warm-white); overflow-x: hidden; }
+img { display: block; max-width: 100%; }
+a { text-decoration: none; color: inherit; }
+button { cursor: pointer; border: none; background: none; font: inherit; }
+
+/* ═══════════════════════════════════════════
+   PROPOSAL BANNER
+═══════════════════════════════════════════ */
+.proposal-banner {
+  background: var(--charcoal); color: #fff;
+  text-align: center; padding: 8px 16px;
+  font-size: 11px; font-weight: 600;
+  letter-spacing: .18em; text-transform: uppercase;
+  line-height: 1.45;
+}
+.proposal-banner span { color: var(--lemon); }
+
+/* ═══════════════════════════════════════════
+   NAVIGATION — smart hide + mobile
+═══════════════════════════════════════════ */
+.nav {
+  position: sticky; top: 0; z-index: 900;
+  background: var(--green);
+  height: var(--nav-h);
+  display: flex; align-items: center;
+  justify-content: space-between;
+  padding: 0 48px;
+  box-shadow: 0 2px 24px rgba(0,0,0,.4), 0 1px 0 rgba(61,107,80,.35);
+  transition: transform .35s var(--ease-out);
+}
+.nav.hidden { transform: translateY(-100%); }
+
+.nav-logo {
+  font-family: var(--font-display);
+  font-size: 26px; font-weight: 600; font-style: italic;
+  color: var(--lemon); letter-spacing: -.02em; flex-shrink: 0;
+}
+.nav-logo span { color: #fff; }
+
+.nav-links {
+  display: flex; gap: 32px; list-style: none;
+}
+.nav-links a {
+  font-size: 11px; font-weight: 600;
+  letter-spacing: .15em; text-transform: uppercase;
+  color: rgba(255,255,255,.7);
+  transition: color .2s;
+}
+.nav-links a:hover, .nav-links a.active { color: var(--lemon); }
+
+.nav-right { display: flex; align-items: center; gap: 18px; }
+.nav-social { display: flex; gap: 14px; align-items: center; }
+.nav-social a {
+  color: rgba(255,255,255,.55);
+  display: flex; align-items: center;
+  transition: color .2s;
+}
+.nav-social a:hover { color: var(--lemon); }
+.nav-social svg { width: 18px; height: 18px; }
+
+.btn-reserve {
+  background: var(--lemon); color: var(--green);
+  font-size: 11px; font-weight: 700;
+  letter-spacing: .14em; text-transform: uppercase;
+  padding: 10px 20px; white-space: nowrap;
+  transition: background .2s, transform .2s;
+  flex-shrink: 0;
+}
+.btn-reserve:hover { background: #fff; transform: translateY(-1px); }
+
+/* Hamburger */
+.nav-burger {
+  display: none; flex-direction: column;
+  gap: 5px; padding: 6px;
+  z-index: 1001;
+}
+.nav-burger span {
+  width: 24px; height: 2px;
+  background: var(--lemon);
+  transition: transform .3s, opacity .3s;
+  display: block;
+}
+.nav-burger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.nav-burger.open span:nth-child(2) { opacity: 0; }
+.nav-burger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* Mobile Book button — calendar icon, always visible next to burger ≤1024px */
+.btn-reserve-mobile {
+  display: none;
+  width: 36px; height: 36px;
+  background: var(--lemon);
+  color: var(--green);
+  align-items: center; justify-content: center;
+  flex-shrink: 0;
+  transition: background .2s;
+  border-radius: 0;
+}
+.btn-reserve-mobile:hover { background: #fff; }
+.btn-reserve-mobile svg { width: 16px; height: 16px; }
+
+/* Mobile menu overlay */
+.mobile-menu {
+  position: fixed; inset: 0; z-index: 800;
+  background: var(--green);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 36px;
+  transform: translateX(100%);
+  transition: transform .4s var(--ease-out);
+}
+.mobile-menu.open { transform: translateX(0); }
+.mobile-menu a {
+  font-family: var(--font-display);
+  font-size: 36px; font-weight: 600; font-style: italic;
+  color: #fff; letter-spacing: -.01em;
+  transition: color .2s;
+}
+.mobile-menu a:hover { color: var(--lemon); }
+.mobile-menu .mobile-reserve {
+  background: var(--lemon); color: var(--green);
+  font-family: var(--font-body); font-size: 12px;
+  font-weight: 700; letter-spacing: .15em;
+  text-transform: uppercase; padding: 14px 36px;
+  margin-top: 12px;
+}
+.mobile-social {
+  display: flex; gap: 24px; margin-top: 8px;
+}
+.mobile-social a { color: rgba(255,255,255,.5); }
+.mobile-social svg { width: 22px; height: 22px; }
+
+/* ═══════════════════════════════════════════
+   SHARED TOKENS
+═══════════════════════════════════════════ */
+.label {
+  font-size: 10px; font-weight: 700;
+  letter-spacing: .28em; text-transform: uppercase;
+  color: var(--lemon-deep);
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 14px;
+}
+.label::before { content: ''; width: 24px; height: 1px; background: currentColor; display: block; }
+.label.on-dark { color: var(--lemon); }
+.label.on-dark::before { background: var(--lemon); }
+.label.center { justify-content: center; }
+.label.center::before { display: none; }
+
+.heading {
+  font-family: var(--font-display);
+  font-size: clamp(34px, 4.5vw, 56px);
+  font-weight: 600; font-style: italic;
+  color: var(--green); line-height: 1.05;
+  letter-spacing: -.01em;
+}
+.heading.on-dark { color: #fff; }
+
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: var(--lemon); color: var(--green);
+  font-size: 11px; font-weight: 700;
+  letter-spacing: .15em; text-transform: uppercase;
+  padding: 15px 34px;
+  transition: background .2s, transform .2s, box-shadow .2s;
+}
+.btn-primary:hover { background: var(--lemon-deep); color: #fff; transform: translateY(-2px); box-shadow: 0 10px 28px rgba(242,193,46,.35); }
+
+.btn-outline-white {
+  display: inline-flex; align-items: center; gap: 10px;
+  border: 1px solid rgba(255,255,255,.4); color: #fff;
+  font-size: 11px; font-weight: 600;
+  letter-spacing: .15em; text-transform: uppercase;
+  padding: 15px 34px;
+  transition: border-color .2s, color .2s;
+}
+.btn-outline-white:hover { border-color: var(--lemon); color: var(--lemon); }
+
+.btn-text {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 11px; font-weight: 700;
+  letter-spacing: .18em; text-transform: uppercase;
+  color: var(--green-light);
+  border-bottom: 2px solid var(--green-light);
+  padding-bottom: 3px;
+  transition: gap .2s;
+}
+.btn-text:hover { gap: 14px; }
+.btn-text::after { content: '→'; }
+
+/* ═══════════════════════════════════════════
+   HERO
+═══════════════════════════════════════════ */
+.hero {
+  position: relative; height: 86vh; min-height: 600px; max-height: 860px;
+  display: flex; flex-direction: column; justify-content: flex-end;
+  overflow: hidden;
+}
+.hero-bg {
+  position: absolute; inset: 0;
+  background:
+    linear-gradient(160deg, rgba(0,0,0,.78) 0%, rgba(0,0,0,.22) 55%, rgba(0,0,0,.82) 100%),
+    url('wp-content/uploads/2021/04/Limoncello.jpg') center/cover no-repeat;
+  transition: transform 9s ease-out;
+  transform: scale(1.05);
+}
+.hero-bg.loaded { transform: scale(1); }
+
+.hero-content {
+  position: relative; z-index: 2;
+  padding: 0 72px 80px;
+  max-width: 820px;
+}
+.hero-eyebrow {
+  display: flex; align-items: center; gap: 14px;
+  font-size: 10px; font-weight: 700;
+  letter-spacing: .3em; text-transform: uppercase;
+  color: var(--lemon); margin-bottom: 22px;
+  animation: fadeUp .8s var(--ease-out) .2s both;
+}
+.hero-eyebrow::before { content: ''; width: 36px; height: 1px; background: var(--lemon); }
+.hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(64px, 10vw, 120px);
+  font-weight: 600; font-style: italic;
+  color: #fff; line-height: .92;
+  letter-spacing: -.02em; margin-bottom: 28px;
+  animation: fadeUp .9s var(--ease-out) .35s both;
+}
+.hero-title em { color: var(--lemon); white-space: nowrap; }
+.hero-mobile-break { white-space: nowrap; }
+.hero-sub {
+  font-size: 15px; font-weight: 400;
+  color: rgba(255,255,255,.72); line-height: 1.8;
+  max-width: 420px; margin-bottom: 44px;
+  animation: fadeUp 1s var(--ease-out) .5s both;
+}
+.hero-actions {
+  display: flex; gap: 14px; flex-wrap: wrap;
+  animation: fadeUp 1s var(--ease-out) .65s both;
+}
+
+.hero-bar {
+  position: absolute; bottom: 0; right: 0;
+  background: var(--lemon);
+  display: flex; gap: 0;
+  animation: fadeUp .9s var(--ease-out) .8s both;
+}
+.hero-bar-item {
+  padding: 16px 32px; text-align: center;
+  border-left: 1px solid rgba(0,0,0,.12);
+}
+.hero-bar-item:first-child { border-left: none; }
+.hero-bar-lbl {
+  font-size: 9px; font-weight: 700;
+  letter-spacing: .22em; text-transform: uppercase;
+  color: var(--green-mid); margin-bottom: 3px;
+}
+.hero-bar-val {
+  font-family: var(--font-display);
+  font-size: 16px; font-weight: 700; color: var(--green);
+}
+
+/* ═══════════════════════════════════════════
+   ABOUT
+═══════════════════════════════════════════ */
+.about {
+  padding: 112px 0;
+  background: var(--green-pale);  /* light green tint — the signature touch */
+  position: relative; overflow: hidden;
+}
+.about::after {
+  content: '"'; position: absolute;
+  top: -80px; right: 60px;
+  font-family: var(--font-display);
+  font-size: 360px; font-style: italic;
+  color: rgba(242,193,46,.07); line-height: 1;
+  pointer-events: none;
+}
+.about-inner {
+  max-width: 1160px; margin: 0 auto;
+  padding: 0 72px;
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 88px; align-items: center;
+}
+.about-body {
+  font-size: 16px; line-height: 1.9;
+  color: var(--text-muted); margin: 24px 0 36px;
+}
+.about-hours {
+  display: flex; gap: 36px;
+  padding: 24px 0; margin-bottom: 36px;
+  border-top: 1px solid rgba(0,0,0,.08);
+  border-bottom: 1px solid rgba(0,0,0,.08);
+}
+.about-hours-day { font-size: 10px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 4px; }
+.about-hours-time { font-family: var(--font-display); font-size: 20px; font-weight: 600; color: var(--green-light); }
+
+.about-img-wrap { position: relative; z-index: 1; padding-bottom: 24px; padding-right: 24px; }
+.about-img-wrap::before { content: ""; position: absolute; top: 24px; left: 24px; right: 0; bottom: 0; border: 1.5px solid var(--green); opacity: 0.12; border-radius: 4px; z-index: 0; }
+.about-img-main {
+  width: 100%; aspect-ratio: 4/5; object-fit: cover;
+  border-radius: 4px;
+  box-shadow: 16px 24px 64px rgba(27, 56, 41, 0.08);
+  filter: sepia(0.2) saturate(0.85);
+  background: linear-gradient(135deg, var(--green) 0%, var(--green-mid) 100%);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display); font-style: italic;
+  color: rgba(255,255,255,.3); font-size: 18px; text-align: center;
+  position: relative; z-index: 2;
+}
+.about-badge {
+  position: absolute; bottom: -12px; left: -12px; z-index: 3;
+  background: var(--lemon); padding: 24px 20px; width: 148px;
+}
+.about-badge-num { font-family: var(--font-display); font-size: 48px; font-weight: 700; color: var(--green); line-height: 1; }
+.about-badge-text { font-size: 10px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--green); margin-top: 5px; line-height: 1.4; }
+
+/* ═══════════════════════════════════════════
+   MENU TEASER — SVG icons, no emojis
+═══════════════════════════════════════════ */
+.menu-teaser {
+  background: var(--green); padding: 96px 0;
+  position: relative; overflow: hidden;
+}
+.menu-teaser::after {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 80% 20%, rgba(242,193,46,.07) 0%, transparent 58%);
+  pointer-events: none;
+}
+.menu-teaser-inner { max-width: 1160px; margin: 0 auto; padding: 0 72px; }
+.menu-teaser-header {
+  display: flex; align-items: flex-end;
+  justify-content: space-between; margin-bottom: 56px;
+  flex-wrap: wrap; gap: 24px;
+}
+
+.menu-cats {
+  display: grid; grid-template-columns: repeat(4,1fr); gap: 2px;
+}
+.menu-cat {
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.08);
+  padding: 36px 28px; position: relative;
+  overflow: hidden;
+  transition: background .3s, border-color .3s;
+  cursor: pointer;
+}
+.menu-cat::after {
+  content: ''; position: absolute;
+  bottom: 0; left: 0; right: 0; height: 3px;
+  background: var(--lemon);
+  transform: scaleX(0); transition: transform .3s var(--ease-out);
+  transform-origin: left;
+}
+.menu-cat:hover { background: rgba(242,193,46,.07); border-color: rgba(242,193,46,.2); }
+.menu-cat:hover::after { transform: scaleX(1); }
+
+/* SVG icon container */
+.menu-cat-icon {
+  width: 44px; height: 44px; margin-bottom: 18px;
+  color: var(--lemon); opacity: .85;
+}
+.menu-cat-icon svg { width: 100%; height: 100%; }
+.menu-cat-name { font-family: var(--font-display); font-size: 24px; font-weight: 600; font-style: italic; color: #fff; margin-bottom: 8px; line-height: 1.1; }
+.menu-cat-desc { font-size: 12px; font-weight: 400; color: rgba(255,255,255,.45); line-height: 1.65; }
+
+.menu-teaser-cta {
+  text-align: center; margin-top: 52px;
+  display: flex; align-items: center; justify-content: center; gap: 20px; flex-wrap: wrap;
+}
+
+/* ═══════════════════════════════════════════
+   PHOTO STRIP — static affordance (no hover-only)
+═══════════════════════════════════════════ */
+.photo-strip { padding: 80px 0 0; background: var(--warm-white); overflow: hidden; }
+.photo-strip-header {
+  max-width: 1160px; margin: 0 auto 44px;
+  padding: 0 72px;
+  display: flex; align-items: flex-end;
+  justify-content: space-between; flex-wrap: wrap; gap: 16px;
+}
+
+.photo-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  grid-template-rows: 300px 260px;
+  gap: 4px;
+}
+.photo-cell { position: relative; overflow: hidden; background: var(--lemon-light); }
+.photo-cell.tall { grid-row: span 2; }
+.photo-cell img, .photo-placeholder {
+  width: 100%; height: 100%; object-fit: cover;
+  transition: transform .6s var(--ease-out);
+  display: block;
+}
+.photo-placeholder {
+  background: linear-gradient(135deg, var(--green) 0%, var(--green-mid) 100%);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display); font-size: 13px;
+  font-style: italic; color: rgba(255,255,255,.3); text-align: center;
+  padding: 12px;
+}
+.graphic-tile { background: var(--green); display: flex; text-decoration: none; color: var(--lemon); transition: background .3s; }
+.graphic-tile:hover { background: var(--green-mid); }
+.graphic-tile-inner { border: 1px solid rgba(242, 193, 46, 0.15); border-radius: 2px; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 16px; background-image: linear-gradient(rgba(242,193,46,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(242,193,46,0.04) 1px, transparent 1px); background-size: 24px 24px; background-position: center center; }
+.graphic-tile-icon { width: 44px; height: 44px; margin-bottom: 20px; stroke-width: 1.2; }
+.graphic-tile-text { font-family: var(--font-display); font-size: 36px; font-style: italic; line-height: 1; margin-bottom: 12px; }
+.graphic-tile-sub { font-size: 11px; text-transform: uppercase; letter-spacing: .15em; font-weight: 500; color: rgba(255,255,255,0.6); }
+.graphic-tile-sub span { display: inline-block; border-bottom: 1px solid rgba(255,255,255,0.3); padding-bottom: 2px; }
+.photo-cell:hover img, .photo-cell:hover .photo-placeholder { transform: scale(1.05); }
+
+/* Static overlay — always visible at low opacity, brightens on hover */
+.photo-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,.60) 0%, transparent 55%);
+  opacity: .6;
+  transition: opacity .3s;
+}
+.photo-cell:hover .photo-overlay { opacity: 1; }
+
+/* Instagram badge — ALWAYS visible (static affordance, not hover-only) */
+.photo-ig-badge {
+  position: absolute; bottom: 12px; left: 12px;
+  display: flex; align-items: center; gap: 6px;
+  background: rgba(0,0,0,.78);
+  backdrop-filter: blur(6px);
+  padding: 6px 10px;
+  color: #fff; font-size: 11px; font-weight: 600;
+  letter-spacing: .06em;
+  opacity: .8; /* always visible */
+  transition: opacity .25s;
+}
+.photo-cell:hover .photo-ig-badge { opacity: 1; }
+.photo-ig-badge svg { width: 13px; height: 13px; }
+
+/* Social strip */
+.social-strip {
+  background: var(--lemon);
+  padding: 24px 72px;
+  display: flex; align-items: center;
+  justify-content: space-between; flex-wrap: wrap; gap: 16px;
+}
+.social-strip-text {
+  font-family: var(--font-display);
+  font-size: 20px; font-weight: 600; font-style: italic;
+  color: var(--green);
+}
+.social-strip-links { display: flex; gap: 12px; flex-wrap: wrap; }
+.social-link {
+  display: flex; align-items: center; gap: 7px;
+  background: var(--green); color: var(--lemon);
+  padding: 11px 20px;
+  font-size: 11px; font-weight: 700;
+  letter-spacing: .14em; text-transform: uppercase;
+  transition: background .2s;
+}
+.social-link:hover { background: var(--charcoal); color: #fff; }
+.social-link svg { width: 15px; height: 15px; }
+.social-link.reserve-link { background: var(--cream); color: var(--green); }
+.social-link.reserve-link:hover { background: var(--charcoal); color: #fff; }
+
+/* ═══════════════════════════════════════════
+   REVIEWS
+═══════════════════════════════════════════ */
+.reviews { padding: 108px 0; background: var(--lemon-pale); }
+.reviews-inner { max-width: 1160px; margin: 0 auto; padding: 0 72px; }
+.reviews-header { text-align: center; margin-bottom: 64px; }
+.reviews-slider { position: relative; }
+.reviews-viewport { overflow: hidden; }
+.reviews-track {
+  display: flex;
+  gap: 28px;
+  transition: transform .55s var(--ease-out);
+  will-change: transform;
+}
+.review-card {
+  background: #fff;
+  padding: 36px 32px;
+  border-top: 3px solid var(--lemon);
+  flex: 0 0 calc((100% - 56px) / 3);
+  min-height: 302px;
+  display: flex;
+  flex-direction: column;
+}
+.review-stars { color: var(--lemon-deep); font-size: 15px; letter-spacing: 2px; margin-bottom: 18px; }
+.review-quote { font-family: var(--font-display); font-size: 19px; font-style: italic; line-height: 1.65; color: var(--text-body); margin-bottom: 26px; flex: 1; }
+.review-author { display: flex; align-items: center; gap: 12px; }
+.review-avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--green); display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 17px; font-weight: 700; color: var(--lemon); flex-shrink: 0; }
+.review-name { font-size: 13px; font-weight: 700; }
+.review-src { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+.reviews-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 30px;
+}
+.reviews-nav {
+  width: 42px;
+  height: 42px;
+  border: 1px solid rgba(15,15,15,.18);
+  color: var(--green);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background .2s, color .2s, border-color .2s;
+}
+.reviews-nav:hover { background: var(--green); color: var(--lemon); border-color: var(--green); }
+.reviews-nav svg { width: 17px; height: 17px; }
+.reviews-dots { display: flex; align-items: center; gap: 8px; }
+.reviews-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(15,15,15,.2);
+  transition: width .2s, background .2s;
+}
+.reviews-dot.active { width: 22px; background: var(--green); }
+.reviews-cta { text-align: center; margin-top: 52px; display: flex; align-items: center; justify-content: center; gap: 16px; flex-wrap: wrap; }
+
+/* ═══════════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════════ */
+.footer { background: var(--green); padding: 72px 0 36px; position: relative; }
+.footer::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, transparent, var(--lemon) 30%, var(--lemon) 70%, transparent); }
+.footer-inner {
+  max-width: 1160px; margin: 0 auto;
+  padding: 0 72px;
+  display: grid; grid-template-columns: 2fr 1fr 1fr 1.5fr;
+  gap: 52px; margin-bottom: 52px;
+}
+.footer-logo { font-family: var(--font-display); font-size: 36px; font-weight: 700; font-style: italic; color: var(--lemon); line-height: 1; margin-bottom: 14px; }
+.footer-tag { font-size: 13px; color: rgba(255,255,255,.45); line-height: 1.7; margin-bottom: 24px; max-width: 240px; }
+.footer-social { display: flex; gap: 10px; }
+.footer-social a { width: 38px; height: 38px; border: 1px solid rgba(255,255,255,.14); display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,.45); transition: border-color .2s, color .2s; }
+.footer-social a:hover { border-color: var(--lemon); color: var(--lemon); }
+.footer-social svg { width: 17px; height: 17px; }
+.footer-col-title { font-size: 10px; font-weight: 700; letter-spacing: .24em; text-transform: uppercase; color: var(--lemon); margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid rgba(242,193,46,.2); }
+.footer-links { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.footer-links a { font-size: 13px; color: rgba(255,255,255,.5); transition: color .2s; }
+.footer-links a:hover { color: var(--lemon); }
+/* Fix #4: Brighter Visit Us text — address & hours are core operational info */
+.footer-info p { font-size: 13px; color: rgba(255,255,255,.6); line-height: 1.85; margin-bottom: 4px; }
+.footer-info strong { color: #fff; font-weight: 600; }
+.footer-info .footer-info-val { color: rgba(255,255,255,.82); font-size: 13.5px; }
+.footer-reserve-btn {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  width: 100%; /* full-width CTA block */
+  background: var(--lemon); color: var(--green);
+  padding: 14px 20px; margin-top: 22px;
+  font-size: 11px; font-weight: 700;
+  letter-spacing: .14em; text-transform: uppercase;
+  transition: background .2s;
+}
+.footer-reserve-btn:hover { background: #fff; }
+.footer-reserve-btn svg { width: 14px; height: 14px; }
+.footer-map {
+  grid-column: 1 / -1;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(242,193,46,.18);
+  background: rgba(255,255,255,.04);
+  min-height: 260px;
+}
+.footer-map iframe {
+  width: 100%;
+  height: 300px;
+  border: 0;
+  display: block;
+  filter: grayscale(.18) contrast(1.02);
+}
+.footer-map-fallback {
+  position: absolute;
+  inset: auto 18px 18px 18px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 16px;
+  background: rgba(15,15,15,.9);
+  border: 1px solid rgba(242,193,46,.22);
+  color: #fff;
+}
+.footer-map-fallback strong {
+  display: block;
+  font-size: 11px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--lemon);
+  margin-bottom: 3px;
+}
+.footer-map-fallback span {
+  display: block;
+  font-size: 12px;
+  color: rgba(255,255,255,.68);
+}
+.footer-map-fallback a {
+  flex-shrink: 0;
+  background: var(--lemon);
+  color: var(--green);
+  padding: 11px 14px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.footer-bottom {
+  max-width: 1160px; margin: 0 auto;
+  padding: 24px 72px 0;
+  border-top: 1px solid rgba(255,255,255,.07);
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;
+}
+.footer-bottom p { font-size: 12px; color: rgba(255,255,255,.28); letter-spacing: .04em; }
+.footer-bottom a { color: rgba(242,193,46,.55); transition: color .2s; }
+.footer-bottom a:hover { color: var(--lemon); }
+
+/* ═══════════════════════════════════════════
+   PAGE BREAK BANNER
+═══════════════════════════════════════════ */
+.page-break {
+  background: var(--charcoal); color: #fff;
+  text-align: center; padding: 18px;
+  font-size: 11px; font-weight: 700;
+  letter-spacing: .24em; text-transform: uppercase;
+}
+.page-break span { color: var(--lemon); }
+
+/* ═══════════════════════════════════════════
+   MENU PAGE — HERO
+═══════════════════════════════════════════ */
+.menu-hero {
+  height: 52vh; min-height: 380px; position: relative;
+  display: flex; align-items: flex-end; overflow: hidden;
+}
+.menu-hero-bg {
+  position: absolute; inset: 0;
+  background:
+    linear-gradient(to right, rgba(0,0,0,.92) 38%, rgba(0,0,0,.35) 100%),
+    url('wp-content/uploads/2026/03/z6611401263097_90992c597c3158a69ba1840d4b9c1a28.jpg') center/cover no-repeat;
+}
+.menu-hero-content { position: relative; z-index: 2; padding: 0 72px 64px; }
+.menu-hero-title { font-family: var(--font-display); font-size: clamp(52px, 8vw, 96px); font-weight: 600; font-style: italic; color: #fff; line-height: .92; letter-spacing: -.02em; margin: 14px 0 22px; }
+.menu-hero-title span { color: var(--lemon); }
+.menu-hero-desc { font-size: 14px; color: rgba(255,255,255,.6); max-width: 380px; line-height: 1.75; }
+
+/* ═══════════════════════════════════════════
+   TEXT-BASED MENU
+═══════════════════════════════════════════ */
+.menu-section { padding: 88px 0 100px; background: var(--cream); }
+.menu-section-inner { max-width: 1160px; margin: 0 auto; padding: 0 72px; }
+
+/* Category tabs — swipeable on mobile */
+.menu-tabs-wrap {
+  position: relative;
+  margin-bottom: 56px;
+}
+/* Gradient fade — visual cue: more tabs hidden to the right */
+.menu-tabs-wrap::after {
+  content: '';
+  position: absolute;
+  top: 0; right: 0; bottom: 2px;
+  width: 80px;
+  background: linear-gradient(to right, transparent, var(--cream));
+  pointer-events: none;
+  z-index: 2;
+  transition: opacity .3s;
+}
+/* Hide gradient on desktop where all tabs fit */
+@media (min-width: 1025px) {
+  .menu-tabs-wrap::after { display: none; }
+}
+.menu-tabs {
+  display: flex; gap: 0;
+  border-bottom: 2px solid rgba(0,0,0,.1);
+  overflow-x: auto; -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  scroll-snap-type: x mandatory;
+}
+.menu-tabs::-webkit-scrollbar { display: none; }
+.menu-tab {
+  padding: 14px 28px;
+  font-size: 11px; font-weight: 700;
+  letter-spacing: .18em; text-transform: uppercase;
+  color: var(--text-muted); white-space: nowrap;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px; cursor: pointer;
+  scroll-snap-align: start;
+  transition: color .2s, border-color .2s;
+}
+.menu-tab:hover { color: var(--green); }
+.menu-tab.active { color: var(--green); border-bottom-color: var(--lemon); }
+
+/* Menu category panels */
+.menu-panel { display: none; }
+.menu-panel.active { display: block; }
+
+.menu-cat-header {
+  display: flex; align-items: center; gap: 28px;
+  margin-bottom: 40px; padding-bottom: 24px;
+  border-bottom: 1px solid rgba(0,0,0,.08);
+}
+.menu-cat-icon-lg { width: 52px; height: 52px; color: var(--green); opacity: .7; }
+.menu-cat-icon-lg svg { width: 100%; height: 100%; }
+.menu-cat-title { font-family: var(--font-display); font-size: clamp(28px, 4vw, 42px); font-weight: 600; font-style: italic; color: var(--green); line-height: 1; }
+.menu-cat-subtitle { font-size: 12px; color: var(--text-muted); letter-spacing: .1em; margin-top: 4px; }
+
+/* Menu items grid */
+.menu-items { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; }
+.menu-item {
+  padding: 24px 28px; background: #fff;
+  display: flex; justify-content: space-between; align-items: flex-start; gap: 16px;
+  border-left: 3px solid transparent;
+  transition: border-color .2s, box-shadow .2s;
+}
+.menu-item:hover { border-left-color: var(--green-light); box-shadow: inset 0 0 0 1px rgba(61,107,80,.12); }
+.menu-item.signature {
+  border-left-color: var(--lemon);
+  background: var(--lemon-pale);  /* visual anchor — pulls eye to hero dishes */
+}
+.menu-item-info { flex: 1; }
+.menu-item-name {
+  font-family: var(--font-display);
+  font-size: 19px; font-weight: 600;
+  color: var(--green); line-height: 1.15;
+  margin-bottom: 6px;
+  display: flex; align-items: center; gap: 8px;
+}
+/* Signature: Deep Gold bold name — elegant, not loud */
+.menu-item.signature .menu-item-name {
+  color: var(--lemon-deep);
+  font-weight: 700;
+}
+/* Lemon line-art icon — replaces plain dot */
+.sig-icon {
+  width: 16px; height: 16px; flex-shrink: 0;
+  color: var(--lemon-deep); opacity: .85;
+}
+.sig-icon svg { width: 100%; height: 100%; }
+.menu-item-desc { font-size: 13px; color: var(--text-muted); line-height: 1.65; }
+.menu-item-price {
+  font-family: var(--font-display);
+  font-size: 18px; font-weight: 700;
+  color: var(--green); white-space: nowrap; flex-shrink: 0;
+  padding-top: 2px;
+}
+/* ── B1: Tabs scroll hint arrow ── */
+.tabs-scroll-hint {
+  position: absolute; right: 6px; top: 50%; transform: translateY(-50%);
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--lemon); color: var(--green);
+  display: none; /* hidden on desktop — shown via media query below */
+  align-items: center; justify-content: center;
+  pointer-events: none; z-index: 3; flex-shrink: 0;
+  transition: opacity .25s, transform .25s;
+  box-shadow: 0 2px 8px rgba(0,0,0,.18);
+}
+.tabs-scroll-hint svg { width: 12px; height: 12px; }
+.menu-tabs-wrap.tabs-at-end .tabs-scroll-hint { opacity: 0; transform: translateY(-50%) translateX(4px); }
+@media (max-width: 1024px) {
+  .tabs-scroll-hint { display: flex; }
+}
+/* ── C1: Floating labels ── */
+.contact-form-float {
+  position: relative;
+}
+.contact-form-float .contact-form-input,
+.contact-form-float .contact-form-textarea {
+  padding-top: 20px; padding-bottom: 8px;  /* room for label to float into */
+}
+.contact-form-float .contact-form-label {
+  position: absolute;
+  left: 16px; top: 14px;
+  font-size: 13px; font-weight: 400;
+  letter-spacing: 0; text-transform: none;
+  color: rgba(58,46,30,.45);
+  pointer-events: none;
+  transition: top .18s, font-size .18s, letter-spacing .18s, color .18s, font-weight .18s;
+  line-height: 1;
+}
+.contact-form-float textarea ~ .contact-form-label {
+  top: 16px;  /* textarea: align with top, not center */
+}
+/* Float up when focused or has content */
+.contact-form-float .contact-form-input:focus ~ .contact-form-label,
+.contact-form-float .contact-form-input:not(:placeholder-shown) ~ .contact-form-label,
+.contact-form-float .contact-form-textarea:focus ~ .contact-form-label,
+.contact-form-float .contact-form-textarea:not(:placeholder-shown) ~ .contact-form-label {
+  top: 6px;
+  font-size: 9px; font-weight: 700;
+  letter-spacing: .14em; text-transform: uppercase;
+  color: var(--lemon-deep);
+}
+/* ── C2: Error state ── */
+.contact-form-field.is-error .contact-form-input,
+.contact-form-field.is-error .contact-form-textarea {
+  border-color: #A03020;
+  box-shadow: 0 0 0 3px rgba(160,48,32,.1);
+}
+.contact-form-field.is-error .contact-form-float .contact-form-label {
+  color: #A03020;
+}
+.contact-form-field.is-error .contact-form-input:not(:placeholder-shown) ~ .contact-form-label,
+.contact-form-field.is-error .contact-form-input:focus ~ .contact-form-label {
+  color: #A03020;
+}
+.contact-form-error-msg {
+  font-size: 11px; font-weight: 600;
+  color: #A03020; margin-top: 6px;
+  display: flex; align-items: center; gap: 5px; line-height: 1.4;
+}
+.contact-form-error-msg svg { flex-shrink: 0; }
+/* ── D1: Footer Visit Us — breathing room ── */
+.footer-info p { margin-bottom: 14px; }
+/* ── Extra: Skeleton shimmer for photo strip ── */
+@keyframes shimmer {
+  0%   { background-position: -400px 0; }
+  100% { background-position:  400px 0; }
+}
+.photo-cell.loading {
+  background: linear-gradient(90deg, #e8e0d4 25%, #f2ede6 50%, #e8e0d4 75%);
+  background-size: 800px 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+}
+.photo-cell.loading img,
+.photo-cell.loading .photo-overlay,
+.photo-cell.loading .photo-ig-badge { visibility: hidden; }
+/* ── Extra: Back to Top button ── */
+.back-to-top {
+  position: fixed; bottom: 28px; right: 28px; z-index: 800;
+  width: 44px; height: 44px; border-radius: 50%;
+  background: var(--green); color: var(--lemon);
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 16px rgba(0,0,0,.28);
+  opacity: 0; pointer-events: none;
+  transform: translateY(12px);
+  transition: opacity .3s, transform .3s;
+  cursor: pointer; border: none;
+}
+.back-to-top.visible { opacity: 1; pointer-events: auto; transform: translateY(0); }
+.back-to-top svg { width: 18px; height: 18px; }
+
+/* ═══════════════════════════════════════════
+   ABOUT PAGE
+═══════════════════════════════════════════ */
+.about-page-hero {
+  height: 50vh; min-height: 340px;
+  position: relative; display: flex; align-items: flex-end; overflow: hidden;
+}
+.about-page-hero-bg {
+  position: absolute; inset: 0;
+  background:
+    linear-gradient(to bottom, rgba(0,0,0,.55) 0%, rgba(0,0,0,.88) 100%),
+    url('wp-content/uploads/2021/04/Limoncello.jpg') center/cover no-repeat;
+}
+.about-story { padding: 96px 0; background: var(--warm-white); }
+.about-story-inner { max-width: 860px; margin: 0 auto; padding: 0 72px; }
+.about-story p { font-size: 17px; line-height: 1.9; color: var(--text-muted); margin-bottom: 24px; }
+.about-story p:first-of-type { font-family: var(--font-display); font-size: 24px; font-style: italic; color: var(--text-body); line-height: 1.65; }
+.about-values { background: var(--green-pale); padding: 80px 0; }
+.about-values-inner { max-width: 1160px; margin: 0 auto; padding: 0 72px; }
+.values-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 2px; margin-top: 48px; }
+.value-card { background: #fff; padding: 36px 28px; border-top: 3px solid var(--lemon); }
+.value-icon { width: 40px; height: 40px; color: var(--green); margin-bottom: 16px; opacity: .7; }
+.value-title { font-family: var(--font-display); font-size: 22px; font-weight: 600; font-style: italic; color: var(--green); margin-bottom: 10px; }
+.value-text { font-size: 13px; color: var(--text-muted); line-height: 1.7; }
+
+/* ═══════════════════════════════════════════
+   CONTACT PAGE
+═══════════════════════════════════════════ */
+.contact-page { padding: 96px 0; background: var(--warm-white); }
+.contact-inner { max-width: 1160px; margin: 0 auto; padding: 0 72px; display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
+.contact-info-block { margin-bottom: 32px; }
+.contact-info-label { font-size: 10px; font-weight: 700; letter-spacing: .22em; text-transform: uppercase; color: var(--lemon-deep); margin-bottom: 8px; }
+.contact-info-value { font-family: var(--font-display); font-size: 22px; font-weight: 600; color: var(--green); line-height: 1.3; }
+.contact-info-sub { font-size: 13px; color: var(--text-muted); margin-top: 4px; line-height: 1.65; }
+/* Tap-to-call — prominent on mobile, subtle on desktop */
+.tap-call-btn {
+  display: none; /* hidden desktop — plain underlined number is enough */
+  margin-top: 10px;
+}
+.tap-call-btn a {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--green); color: var(--lemon);
+  padding: 13px 24px; width: 100%;
+  font-size: 14px; font-weight: 700; letter-spacing: .06em;
+  justify-content: center;
+}
+.tap-call-btn svg { width: 18px; height: 18px; }
+@media (max-width: 768px) {
+  .tap-call-btn { display: block; }
+}
+
+/* Tap-to-navigate — always visible, Google Maps / Apple Maps */
+.tap-nav-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  margin-top: 12px;
+  background: var(--lemon); color: var(--green);
+  padding: 11px 20px;
+  font-size: 11px; font-weight: 700;
+  letter-spacing: .15em; text-transform: uppercase;
+  transition: background .2s;
+}
+.tap-nav-btn:hover { background: var(--lemon-deep); color: #fff; }
+.tap-nav-btn svg { width: 15px; height: 15px; }
+@media (max-width: 768px) {
+  .tap-nav-btn { width: 100%; justify-content: center; padding: 14px 20px; font-size: 13px; }
+}
+
+.contact-map-placeholder {
+  aspect-ratio: 16/10; background: var(--green);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display); font-size: 18px; font-style: italic;
+  color: rgba(255,255,255,.3); text-align: center; padding: 20px;
+}
+.contact-form-wrap { background: var(--cream); padding: 44px; }
+.contact-form-title { font-family: var(--font-display); font-size: 30px; font-weight: 600; font-style: italic; color: var(--green); margin-bottom: 8px; }
+.contact-form-sub { font-size: 13px; color: var(--text-muted); margin-bottom: 28px; line-height: 1.65; }
+.form-placeholder { background: rgba(0,0,0,.04); border: 1px dashed rgba(0,0,0,.15); padding: 36px 24px; text-align: center; }
+.form-placeholder p { font-size: 12px; color: var(--text-muted); letter-spacing: .06em; }
+.form-placeholder strong { display: block; font-family: var(--font-display); font-size: 18px; font-style: italic; color: var(--green); margin-bottom: 6px; }
+
+/* ═══════════════════════════════════════════
+   CONTACT FORM — UI component spec (Fix #2)
+   Defines visual state: default / focus / submit
+═══════════════════════════════════════════ */
+.contact-form-field { margin-bottom: 20px; }
+.contact-form-label {
+  display: block;
+  font-size: 10px; font-weight: 700;
+  letter-spacing: .2em; text-transform: uppercase;
+  color: var(--text-muted); margin-bottom: 7px;
+}
+.contact-form-input,
+.contact-form-textarea {
+  width: 100%;
+  border: 1.5px solid rgba(0,0,0,.13);
+  padding: 13px 16px;
+  font-family: var(--font-body); font-size: 14px;
+  color: var(--text-body); background: #fafaf8;
+  outline: none; border-radius: 0;
+  transition: border-color .2s, background .2s, box-shadow .2s;
+  -webkit-appearance: none;
+  min-height: 48px; /* touch-friendly: 48px minimum */
+}
+.contact-form-input:focus,
+.contact-form-textarea:focus {
+  border-color: var(--lemon);   /* focus ring — lemon yellow signal */
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(242,193,46,.14);
+}
+.contact-form-textarea { min-height: 128px; resize: vertical; line-height: 1.6; }
+.contact-form-input::placeholder,
+.contact-form-textarea::placeholder { color: rgba(58,46,30,.32); font-style: italic; }
+.contact-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.form-spec-note {
+  background: rgba(242,193,46,.07); border-left: 3px solid var(--lemon);
+  padding: 13px 16px; margin-top: 20px;
+}
+.form-spec-note p { font-size: 12px; color: var(--text-muted); line-height: 1.7; }
+.form-spec-note strong { color: var(--lemon-deep); }
+@media (max-width: 600px) {
+  .contact-form-row { grid-template-columns: 1fr; }
+}
+
+/* ═══════════════════════════════════════════
+   RESERVE CTA STRIP
+═══════════════════════════════════════════ */
+.reserve-cta { background: var(--green); padding: 72px 0; text-align: center; border-top: 3px solid var(--green-light); }
+.reserve-cta-inner { max-width: 640px; margin: 0 auto; padding: 0 32px; }
+.reserve-cta h2 { font-family: var(--font-display); font-size: clamp(32px, 5vw, 52px); font-weight: 600; font-style: italic; color: #fff; margin-bottom: 14px; line-height: 1.1; }
+.reserve-cta h2 span { color: var(--lemon); }
+.reserve-cta p { font-size: 14px; color: rgba(255,255,255,.55); margin-bottom: 36px; line-height: 1.7; }
+.reserve-cta-btns { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+
+/* ═══════════════════════════════════════════
+   DESIGN SYSTEM PANEL
+═══════════════════════════════════════════ */
+.ds { background: #111; padding: 72px; font-family: var(--font-body); }
+.ds-row { margin-bottom: 48px; }
+.ds-row h3 { font-size: 10px; font-weight: 700; letter-spacing: .28em; text-transform: uppercase; color: rgba(255,255,255,.32); margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,.05); }
+.swatches { display: flex; flex-wrap: wrap; gap: 16px; }
+.swatch-block { width: 72px; height: 52px; border: 1px solid rgba(255,255,255,.06); }
+.swatch-name { font-size: 11px; color: rgba(255,255,255,.4); margin-top: 7px; }
+.swatch-hex { font-size: 10px; color: rgba(255,255,255,.25); font-family: monospace; }
+.wcag-note {
+  background: rgba(242,193,46,.08); border-left: 3px solid var(--lemon);
+  padding: 16px 20px; margin-top: 20px;
+}
+.wcag-note p { font-size: 13px; color: rgba(255,255,255,.6); line-height: 1.7; }
+.wcag-note strong { color: var(--lemon); }
+
+/* ═══════════════════════════════════════════
+   ANIMATIONS
+═══════════════════════════════════════════ */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(22px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.reveal { opacity: 0; transform: translateY(26px); transition: opacity .7s var(--ease-out), transform .7s var(--ease-out); }
+.reveal.visible { opacity: 1; transform: none; }
+
+/* ═══════════════════════════════════════════
+   ██ RESPONSIVE — MOBILE FIRST
+═══════════════════════════════════════════ */
+
+/* Tablet: ≤ 1024px */
+@media (max-width: 1024px) {
+  .nav { padding: 0 28px; }
+  .nav-links, .nav-social { display: none; }
+  .btn-reserve.desktop-only { display: none; }
+  .btn-reserve-mobile { display: flex; }
+  .nav-burger { display: flex; }
+
+  .hero-content { padding: 0 40px 72px; }
+  .hero-bar { display: none; } /* on mobile: show info differently */
+
+  .about-inner { gap: 56px; padding: 0 40px; }
+  .menu-teaser-inner { padding: 0 40px; }
+  .menu-cats { grid-template-columns: repeat(2,1fr); }
+  .photo-strip-header { padding: 0 40px; }
+  .social-strip { padding: 20px 40px; }
+  .reviews-inner { padding: 0 40px; }
+  .reviews-track { gap: 20px; }
+  .review-card { flex-basis: calc((100% - 20px) / 2); }
+  .footer-inner { grid-template-columns: 1fr 1fr; gap: 36px; padding: 0 40px; }
+  .footer-bottom { padding: 20px 40px 0; }
+
+  .menu-hero-content { padding: 0 40px 52px; }
+  .menu-section-inner { padding: 0 40px; }
+  .menu-items { grid-template-columns: 1fr; }
+
+  .about-story-inner { padding: 0 40px; }
+  .about-values-inner { padding: 0 40px; }
+  .values-grid { grid-template-columns: 1fr 1fr; }
+  .contact-inner { padding: 0 40px; }
+
+  .ds { padding: 48px 40px; }
+}
+
+/* Mobile: ≤ 768px */
+@media (max-width: 768px) {
+  :root { --nav-h: 60px; }
+
+  .proposal-banner {
+    padding: 6px 12px;
+    font-size: 9px;
+    letter-spacing: .12em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .nav { padding: 0 20px; }
+  .nav-logo { font-size: 22px; }
+
+  /* Hero */
+  .hero { min-height: 86svh; height: auto; max-height: none; }
+  .hero-content { padding: 0 24px 44px; max-width: 100%; }
+  .hero-title { font-size: clamp(46px, 13vw, 62px); line-height: .96; margin-bottom: 22px; }
+  .hero-title em { white-space: normal; }
+  .hero-mobile-break { display: block; }
+  .hero-sub { font-size: 14px; max-width: 100%; line-height: 1.7; margin-bottom: 30px; }
+  .hero-actions { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .hero-actions a { width: 100%; max-width: none; justify-content: center; }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  /* About */
+  .about { padding: 72px 0 96px; }
+  .about-inner { grid-template-columns: 1fr; gap: 40px; padding: 0 24px; }
+  .about-img-wrap { order: -1; }
+  .about-badge { left: -8px; bottom: -16px; width: 130px; }
+  .about-badge-num { font-size: 38px; }
+  .about-hours { flex-direction: column; gap: 16px; }
+
+  /* Menu teaser */
+  .menu-teaser { padding: 72px 0; }
+  .menu-teaser-inner { padding: 0 24px; }
+  .menu-teaser-header { flex-direction: column; align-items: flex-start; }
+  .menu-cats { grid-template-columns: 1fr 1fr; gap: 2px; }
+  .menu-cat { padding: 24px 20px; }
+  .menu-cat-icon { width: 36px; height: 36px; margin-bottom: 14px; }
+  .menu-cat-name { font-size: 20px; }
+  .menu-cat-desc { color: rgba(255,255,255,.72); }
+  .menu-teaser-cta { flex-direction: column; }
+
+  /* Photo grid — 2 col */
+  .photo-grid {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 200px 200px 200px;
+  }
+  .photo-cell.tall { grid-row: span 1; }
+
+  /* Social strip */
+  .social-strip { padding: 20px 24px; flex-direction: column; align-items: flex-start; }
+  .social-strip-links { flex-direction: column; width: 100%; }
+  .social-link { width: 100%; justify-content: center; }
+
+  /* Reviews */
+  .reviews { padding: 72px 0; }
+  .reviews-inner { padding: 0 24px; }
+  .reviews-track { gap: 16px; }
+  .review-card { flex-basis: 100%; min-height: 286px; padding: 30px 26px; }
+  .reviews-controls { margin-top: 24px; }
+
+  /* Footer */
+  .footer { padding: 56px 0 28px; }
+  .footer-inner { grid-template-columns: 1fr; gap: 32px; padding: 0 24px; }
+  .footer-map { min-height: 320px; }
+  .footer-map iframe { height: 320px; }
+  .footer-map-fallback {
+    left: 12px;
+    right: 12px;
+    bottom: 12px;
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .footer-map-fallback a { width: 100%; text-align: center; }
+  .footer-bottom { padding: 20px 24px 0; flex-direction: column; gap: 8px; }
+
+  /* Menu page */
+  .menu-hero { height: 46vh; min-height: 300px; }
+  .menu-hero-content { padding: 0 24px 44px; }
+  .menu-section { padding: 64px 0; }
+  .menu-section-inner { padding: 0 24px; }
+  .menu-tabs { gap: 0; margin-bottom: 40px; }
+  .menu-tab { padding: 12px 18px; font-size: 10px; }
+  .menu-items { grid-template-columns: 1fr; }
+  .menu-item { padding: 20px 20px; }
+  .menu-item-name { font-size: 17px; }
+
+  /* About page */
+  .about-story { padding: 64px 0; }
+  .about-story-inner { padding: 0 24px; }
+  .about-values { padding: 56px 0; }
+  .about-values-inner { padding: 0 24px; }
+  .values-grid { grid-template-columns: 1fr; }
+
+  /* Contact */
+  .contact-page { padding: 64px 0; }
+  .contact-inner { grid-template-columns: 1fr; gap: 40px; padding: 0 24px; }
+
+  /* Reserve CTA */
+  .reserve-cta { padding: 56px 0; }
+  .reserve-cta-btns { flex-direction: column; align-items: center; }
+  .reserve-cta-btns a { width: 100%; max-width: 300px; justify-content: center; }
+
+  /* DS */
+  .ds { padding: 40px 24px; }
+
+  /* Photo strip header */
+  .photo-strip-header { padding: 0 24px; }
+}
+
+/* Small mobile: ≤ 480px */
+@media (max-width: 480px) {
+  .photo-grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(6, 220px);
+  }
+  .menu-cats { grid-template-columns: 1fr; }
+  .footer-social a { width: 36px; height: 36px; }
+}
+
+/* ─── Scrollbar ─── */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--green); }
+::-webkit-scrollbar-thumb { background: var(--lemon); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<!-- Proposal Banner -->
+<div class="proposal-banner">
+  <span>Design Proposal Demo 3</span> — Limoncello · Since 2014 · Brand copy refresh · Mobile-first · ACF-ready
+</div>
+
+<!-- Mobile Menu Overlay -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#page-home">Home</a>
+  <a href="#page-menu" style="color:var(--lemon)">Menu</a>
+  <a href="#page-about">About</a>
+  <a href="#page-contact">Contact</a>
+  <a href="https://www.google.com/maps/reserve/v/dine/c/vnw1q-YBfnQ" class="mobile-reserve">Reserve a Table</a>
+  <div class="mobile-social">
+    <a href="https://www.facebook.com/limoncellovn/" title="Facebook">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+    </a>
+    <a href="https://www.instagram.com/limoncello__danang/" title="Instagram">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+    </a>
+  </div>
+</div>
+
+<!-- ════ NAV ════ -->
+<nav class="nav" id="mainNav">
+  <div class="nav-logo">Limoncello<span>.</span></div>
+  <ul class="nav-links">
+    <li><a href="#page-home" class="active">Home</a></li>
+    <li><a href="#page-menu">Menu</a></li>
+    <li><a href="#page-about">About</a></li>
+    <li><a href="#page-contact">Contact</a></li>
+  </ul>
+  <div class="nav-right">
+    <div class="nav-social">
+      <a href="https://www.facebook.com/limoncellovn/" title="Facebook">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+      </a>
+      <a href="https://www.instagram.com/limoncello__danang/" title="Instagram">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+      </a>
+    </div>
+    <a href="https://www.google.com/maps/reserve/v/dine/c/vnw1q-YBfnQ" class="btn-reserve desktop-only">Reserve a Table</a>
+    <!-- Fix #1: Mobile CTA — always visible, 1-tap booking next to burger -->
+    <a href="https://www.google.com/maps/reserve/v/dine/c/vnw1q-YBfnQ" class="btn-reserve-mobile" title="Reserve a Table" aria-label="Reserve a Table">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+    </a>
+    <button class="nav-burger" id="navBurger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- ════════════════════════════
+     HOME PAGE
+════════════════════════════ -->
+
+<!-- HERO -->
+<section class="hero" id="page-home">
+  <div class="hero-bg" id="heroBg"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">Đà Nẵng · Vietnam</div>
+    <h1 class="hero-title">Italian warmth.<br><em>Served in <span class="hero-mobile-break">Đà Nẵng.</span></em></h1>
+    <p class="hero-sub">Handmade pizza, fresh pasta, imported Italian ingredients, and warm hospitality in Đà Nẵng since 2014.</p>
+    <div class="hero-actions">
+      <a href="#page-menu" class="btn-primary">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        Explore the Menu
+      </a>
+      <a href="https://www.google.com/maps/reserve/v/dine/c/vnw1q-YBfnQ" class="btn-outline-white">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Book a Table
+      </a>
+    </div>
+  </div>
+  <div class="hero-bar">
+    <div class="hero-bar-item"><div class="hero-bar-lbl">Hours</div><div class="hero-bar-val">11AM – 10PM</div></div>
+    <div class="hero-bar-item"><div class="hero-bar-lbl">Every day</div><div class="hero-bar-val">Mon – Sun</div></div>
+    <div class="hero-bar-item"><div class="hero-bar-lbl">Booking</div><div class="hero-bar-val">Google Reserve</div></div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="about">
+  <div class="about-inner">
+    <div class="about-text reveal">
+      <div class="label">Our Story</div>
+      <h2 class="heading">Since 2014,<br>at the table.</h2>
+      <p class="about-body">Since opening in Đà Nẵng in 2014, Limoncello has stayed close to the rituals that make Italian dining feel generous: dough prepared by hand, pasta rolled fresh, sauces given time, and ingredients chosen with care. It is familiar, unhurried, and made for sharing.</p>
+      <div class="about-hours">
+        <div><div class="about-hours-day">Open daily</div><div class="about-hours-time">11:00 AM – 10:00 PM</div></div>
+        <div><div class="about-hours-day">Kitchen closes</div><div class="about-hours-time">9:30 PM</div></div>
+      </div>
+      <a href="#page-about" class="btn-text">Read Our Story</a>
+    </div>
+    <div class="about-img-wrap reveal" style="transition-delay:.15s">
+      <img class="about-img-main" src="wp-content/uploads/2022/09/IMG_1067-scaled.jpg" alt="Limoncello restaurant interior" onerror="this.outerHTML='<div class=\'about-img-main\'>Restaurant interior photo</div>'">
+      <div class="about-badge"><div class="about-badge-num">2014</div><div class="about-badge-text">Serving Italian Dining in Đà Nẵng</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- MENU TEASER — SVG icons -->
+<section class="menu-teaser">
+  <div class="menu-teaser-inner">
+    <div class="menu-teaser-header">
+      <div>
+        <div class="label on-dark">What We Serve</div>
+        <h2 class="heading on-dark">Italian classics,<br><em>made with care.</em></h2>
+      </div>
+      <a href="#page-menu" class="btn-primary">Explore the Menu</a>
+    </div>
+
+    <div class="menu-cats">
+      <!-- Pizza — SVG line-art -->
+      <div class="menu-cat reveal">
+        <div class="menu-cat-icon">
+          <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="24" cy="24" r="20"/>
+            <line x1="24" y1="4" x2="24" y2="44"/>
+            <line x1="6.4" y1="14" x2="41.6" y2="34"/>
+            <line x1="6.4" y1="34" x2="41.6" y2="14"/>
+            <circle cx="16" cy="20" r="2.5" fill="currentColor" stroke="none"/>
+            <circle cx="28" cy="30" r="2.5" fill="currentColor" stroke="none"/>
+            <circle cx="22" cy="14" r="2" fill="currentColor" stroke="none"/>
+          </svg>
+        </div>
+        <div class="menu-cat-name">Pizza</div>
+        <div class="menu-cat-desc">Hand-prepared dough, San Marzano tomatoes, and mozzarella baked for a crisp, generous bite.</div>
+      </div>
+      <!-- Pasta — fork & swirl -->
+      <div class="menu-cat reveal" style="transition-delay:.08s">
+        <div class="menu-cat-icon">
+          <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M24 8 C24 8 18 14 18 22 C18 30 24 34 24 42"/>
+            <path d="M24 8 C24 8 30 14 30 22 C30 30 24 34 24 42"/>
+            <path d="M16 10 C16 10 12 14 14 20"/>
+            <path d="M32 10 C32 10 36 14 34 20"/>
+            <ellipse cx="24" cy="26" rx="10" ry="6"/>
+          </svg>
+        </div>
+        <div class="menu-cat-name">Pasta</div>
+        <div class="menu-cat-desc">Fresh pasta, simple sauces, and slow-cooked ragù made for a proper Italian meal.</div>
+      </div>
+      <!-- Antipasti — leaf/platter -->
+      <div class="menu-cat reveal" style="transition-delay:.16s">
+        <div class="menu-cat-icon">
+          <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <ellipse cx="24" cy="28" rx="18" ry="6"/>
+            <path d="M10 28 C10 28 8 20 14 16 C20 12 24 18 24 18"/>
+            <path d="M38 28 C38 28 40 20 34 16 C28 12 24 18 24 18"/>
+            <path d="M24 18 L24 28"/>
+            <path d="M16 22 C18 19 22 18 24 18"/>
+            <path d="M32 22 C30 19 26 18 24 18"/>
+          </svg>
+        </div>
+        <div class="menu-cat-name">Antipasti</div>
+        <div class="menu-cat-desc">Italian cold cuts, aged cheeses, burrata, and bright starters made for the whole table.</div>
+      </div>
+      <!-- Main Course — knife & fork -->
+      <div class="menu-cat reveal" style="transition-delay:.24s">
+        <div class="menu-cat-icon">
+          <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="24" cy="24" r="16"/>
+            <line x1="18" y1="10" x2="18" y2="38"/>
+            <path d="M14 10 L14 20 C14 23 18 24 18 24"/>
+            <path d="M22 10 L22 20 C22 23 18 24 18 24"/>
+            <line x1="30" y1="10" x2="30" y2="18"/>
+            <path d="M27 18 C27 22 33 22 33 18 L33 10"/>
+            <line x1="30" y1="22" x2="30" y2="38"/>
+          </svg>
+        </div>
+        <div class="menu-cat-name">Main Course</div>
+        <div class="menu-cat-desc">Seafood, meats, and seasonal plates prepared with Mediterranean restraint and balance.</div>
+      </div>
+    </div>
+
+    <div class="menu-teaser-cta">
+      <a href="#page-menu" class="btn-primary">View the Full Menu</a>
+      <a href="https://www.google.com/maps/reserve/v/dine/c/vnw1q-YBfnQ" style="color:rgba(255,255,255,.55);font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;border-bottom:1px solid rgba(255,255,255,.2);padding-bottom:3px;">Book a Table →</a>
+    </div>
+  </div>
+</section>
+
+<!-- PHOTO STRIP — static affordance badges -->
+<section class="photo-strip">
+  <div class="photo-strip-header">
+    <div>
+      <div class="label">Food &amp; Atmosphere</div>
+      <h2 class="heading">A table worth<br>remembering.</h2>
+    </div>
+    <a href="https://www.instagram.com/limoncello__danang/" class="btn-text">See More on Instagram</a>
+  </div>
+
+  <div class="photo-grid">
+    <div class="photo-cell tall loading">
+      <img src="wp-content/uploads/2026/03/z6611401263097_90992c597c3158a69ba1840d4b9c1a28.jpg" alt="Limoncello atmosphere" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="photo-placeholder" style="display:none">Restaurant atmosphere</div>
+      <div class="photo-overlay"></div>
+      <!-- Always-visible badge (static affordance) -->
+      <div class="photo-ig-badge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+        @limoncello__danang
+      </div>
+    </div>
+    <div class="photo-cell loading">
+      <img src="wp-content/uploads/2026/03/z6611411097804_4f1f0f914a264698123202602919e76e.jpg" alt="Food" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="photo-placeholder" style="display:none">Food photo</div>
+      <div class="photo-overlay"></div>
+    </div>
+    <div class="photo-cell loading">
+      <img src="wp-content/uploads/2026/03/z6611411205781_7e9c50432b19aea49380e95f46c8bdff.jpg" alt="Food" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="photo-placeholder" style="display:none">Food photo</div>
+      <div class="photo-overlay"></div>
+    </div>
+    <div class="photo-cell loading">
+      <img src="wp-content/uploads/2026/03/z6611401318147_b8461cd237a862b5acc21f34f0c87f15.jpg" alt="Atmosphere" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="photo-placeholder" style="display:none">Atmosphere</div>
+      <div class="photo-overlay"></div>
+    </div>
+    <div class="photo-cell loading">
+      <img src="wp-content/uploads/2026/03/z6611401272404_09224ad3d87a849055f47a89384a34f8.jpg" alt="Food" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="photo-placeholder" style="display:none">Food photo</div>
+      <div class="photo-overlay"></div>
+    </div>
+    <div class="photo-cell loading">
+      <img src="wp-content/uploads/2026/03/z6611401271738_ef19e986940c8217e4da4dd62af75444.jpg" alt="Food" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="photo-placeholder" style="display:none">Food photo</div>
+      <div class="photo-overlay"></div>
+    </div>
+    <a href="https://www.instagram.com/limoncello__danang/" class="photo-cell graphic-tile" title="Share your moment on Instagram">
+      <div class="graphic-tile-inner">
+        <svg class="graphic-tile-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M24 44 C24 44 14 36 14 24 C14 12 24 4 24 4 C34 4 34 16 34 24 C34 32 24 44 24 44 Z"/><line x1="24" y1="44" x2="24" y2="4"/></svg>
+        <div class="graphic-tile-text">Dal 2014</div>
+        <div class="graphic-tile-sub"><span>Share your Limoncello moment</span></div>
+      </div>
+    </a>
+  </div>
+
+  <div class="social-strip">
+    <div class="social-strip-text">Follow along for specials, new dishes, and quiet corners of the restaurant.</div>
+    <div class="social-strip-links">
+      <a href="https://www.facebook.com/limoncellovn/" class="social-link">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+        Facebook
+      </a>
+      <a href="https://www.instagram.com/limoncello__danang/" class="social-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+        Instagram
+      </a>
+      <a href="https://www.google.com/maps/reserve/v/dine/c/vnw1q-YBfnQ" class="social-link reserve-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Book via Google
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section class="reviews">
+  <div class="reviews-inner">
+    <div class="reviews-header">
+      <div class="label center">Guest Reviews</div>
+      <h2 class="heading" style="text-align:center;font-size:clamp(30px,4vw,48px)">Guests come back<br>for a reason.</h2>
+    </div>
+    <div class="reviews-slider" aria-label="Guest review carousel">
+      <div class="reviews-viewport">
+        <div class="reviews-track" id="reviewsTrack"></div>
+      </div>
+      <div class="reviews-controls">
+        <button class="reviews-nav" id="reviewsPrev" type="button" aria-label="Previous reviews">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <div class="reviews-dots" id="reviewsDots" aria-label="Review pages"></div>
+        <button class="reviews-nav" id="reviewsNext" type="button" aria-label="Next reviews">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="reviews-cta">
+      <a href="https://www.google.com/maps" class="btn-primary" style="background:var(--green);color:var(--lemon)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        Read Google Reviews
+      </a>
+      <a href="https://www.google.com/maps/reserve/v/dine/c/vnw1q-YBfnQ" class="btn-primary">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Book Your Table
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div>
+      <div class="footer-logo">Limoncello.</div>
+      <p class="footer-tag">Italian food, generous hospitality, and shared tables in the heart of Đà Nẵng since 2014.</p>
+      <div class="footer-social">
+        <a href="https://www.facebook.com/limoncellovn/" title="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+        <a href="https://www.instagram.com/limoncello__danang/" title="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+        <a href="https://www.google.com/maps" title="Google Maps"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></a>
+      </div>
+    </div>
+    <div>
+      <div class="footer-col-title">Navigate</div>
+      <ul class="footer-links"><li><a href="#page-home">Home</a></li><li><a href="#page-menu">Menu</a></li><li><a href="#page-about">About Us</a></li><li><a href="#page-contact">Contact</a></li></ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Connect</div>
+      <ul class="footer-links"><li><a href="https://www.google.com/maps">Google Reviews</a></li><li><a href="https://www.facebook.com/limoncellovn/">Facebook</a></li><li><a href="https://www.instagram.com/limoncello__danang/">Instagram</a></li><li><a href="https://www.google.com/maps/reserve/v/dine/c/vnw1q-YBfnQ">Book a Table</a></li></ul>
+    </div>
+    <!-- Fix #4: Visit Us — brighter text + full-width CTA block -->
+    <div class="footer-info">
+      <div class="footer-col-title">Visit Us</div>
+      <p><strong>Address</strong><br>
+        <a href="https://maps.google.com/?q=Limoncello+Restaurant+Da+Nang" target="_blank" class="footer-info-val" style="text-decoration:underline;text-underline-offset:3px;text-decoration-color:rgba(255,255,255,.25);transition:text-decoration-color .2s" onmouseover="this.style.textDecorationColor='var(--lemon)'" onmouseout="this.style.textDecorationColor='rgba(255,255,255,.25)'">Đà Nẵng, Vietnam ↗</a>
+      </p>
+      <p><strong>Hours</strong><br><span class="footer-info-val">Every day · 11AM – 10PM</span></p>
+      <p><span style="font-size:12px;color:rgba(255,255,255,.45)">Kitchen closes 9:30 PM</span></p>
+      <a href="https://www.google.com/maps/reserve/v/dine/c/vnw1q-YBfnQ" class="footer-reserve-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Secure Your Table
+      </a>
+    </div>
+    <div class="footer-map" aria-label="Limoncello location map">
+      <iframe
+        title="Limoncello Restaurant on Google Maps"
+        src="https://maps.google.com/maps?q=Limoncello%20Restaurant%20Da%20Nang&t=&z=15&ie=UTF8&iwloc=&output=embed"
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"></iframe>
+      <div class="footer-map-fallback">
+        <div>
+          <strong>Find Limoncello</strong>
+          <span>Open directions in Google Maps if the embedded map does not load.</span>
+        </div>
+        <a href="https://maps.google.com/?q=Limoncello+Restaurant+Da+Nang" target="_blank" rel="noopener">Open Map</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 Limoncello Restaurant · Đà Nẵng, Vietnam</p>
+    <p>Design by <a href="https://ludimedia.net">LudiMedia</a></p>
+  </div>
+</footer>
+
+<!-- ════════════════════════════
+     MENU PAGE
+════════════════════════════ -->
+<div class="page-break" id="page-menu">↓ &nbsp;<span>Menu Page</span>&nbsp; — &nbsp;/menu/&nbsp; ↓</div>
+
+<nav class="nav" style="position:relative;top:auto">
+  <div class="nav-logo">Limoncello<span>.</span></div>
+  <ul class="nav-links"><li><a href="#page-home">Home</a></li><li><a href="#page-menu" class="active">Menu</a></li><li><a href="#page-about">About</a></li><li><a href="#page-contact">Contact</a></li></ul>
+  <div class="nav-right">
+    <div class="nav-social">
+      <a href="https://www.facebook.com/limoncellovn/"><svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+      <a href="https://www.instagram.com/limoncello__danang/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+    </div>
+    <a href="https://www.google.com/maps/reserve/v/dine/c/vnw1q-YBfnQ" class="btn-reserve desktop-only">Reserve a Table</a>
+    <a href="https://www.google.com/maps/reserve/v/dine/c/vnw1q-YBfnQ" class="btn-reserve-mobile" title="Reserve a Table" aria-label="Reserve a Table"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></a>
+  </div>
+</nav>
+
+<section class="menu-hero">
+  <div class="menu-hero-bg"></div>
+  <div class="menu-hero-content">
+    <div class="label on-dark" style="margin-bottom:12px">Authentic Italian</div>
+    <h1 class="menu-hero-title">Our <span>Menu</span>.</h1>
+    <p class="menu-hero-desc">Handmade pizza, fresh pasta, Italian antipasti, and seasonal plates made for lingering at the table.</p>
+  </div>
+</section>
+
+<!-- TEXT-BASED MENU — ACF-ready structure -->
+<section class="menu-section">
+  <div class="menu-section-inner">
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:16px;margin-bottom:48px">
+      <div>
+        <div class="label">Browse Our Selection</div>
+        <h2 class="heading" style="font-size:clamp(28px,4vw,44px)">À la Carte</h2>
+      </div>
+      <a href="https://www.google.com/maps/reserve/v/dine/c/vnw1q-YBfnQ" class="btn-primary" style="background:var(--green);color:var(--lemon)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Reserve a Table
+      </a>
+    </div>
+
+    <!-- Tabs — swipeable on mobile, gradient-fade cue on right edge -->
+    <!-- Fix #3: ARIA Tabs — role="tab" + aria-selected + aria-controls -->
+    <div class="menu-tabs-wrap">
+      <span class="tabs-scroll-hint" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </span>
+      <div class="menu-tabs" role="tablist" aria-label="Menu categories">
+        <button class="menu-tab active" data-panel="antipasti" role="tab" id="tab-antipasti" aria-selected="true"  aria-controls="panel-antipasti" tabindex="0">Antipasti</button>
+        <button class="menu-tab"        data-panel="pizza"     role="tab" id="tab-pizza"     aria-selected="false" aria-controls="panel-pizza"     tabindex="-1">Pizza</button>
+        <button class="menu-tab"        data-panel="pasta"     role="tab" id="tab-pasta"     aria-selected="false" aria-controls="panel-pasta"     tabindex="-1">Pasta</button>
+        <button class="menu-tab"        data-panel="main"      role="tab" id="tab-main"      aria-selected="false" aria-controls="panel-main"      tabindex="-1">Main Course</button>
+        <button class="menu-tab"        data-panel="lunch"     role="tab" id="tab-lunch"     aria-selected="false" aria-controls="panel-lunch"     tabindex="-1">Lunch Combo</button>
+      </div>
+    </div>
+
+    <!-- ANTIPASTI -->
+    <div class="menu-panel active" id="panel-antipasti" role="tabpanel" aria-labelledby="tab-antipasti">
+      <div class="menu-cat-header">
+        <div class="menu-cat-icon-lg"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="24" cy="28" rx="18" ry="6"/><path d="M10 28 C10 28 8 20 14 16 C20 12 24 18 24 18"/><path d="M38 28 C38 28 40 20 34 16 C28 12 24 18 24 18"/><path d="M24 18 L24 28"/></svg></div>
+        <div><div class="menu-cat-title">Antipasti</div><div class="menu-cat-subtitle">Starters to share</div></div>
+      </div>
+      <div class="menu-items">
+        <div class="menu-item signature"><div class="menu-item-info"><div class="menu-item-name"><span class="sig-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="8" cy="8.5" rx="5.5" ry="4"/><path d="M8 4.5 C9.2 2.8 11.8 3 13 4"/><path d="M8 12.5 C6.8 14.2 4.2 14 3 13"/><path d="M5.5 8.5 Q8 6.5 10.5 8.5"/></svg></span>Bruschetta al Pomodoro</div><div class="menu-item-desc">Grilled sourdough, fresh tomato, basil, extra virgin olive oil</div></div><div class="menu-item-price">89,000₫</div></div>
+        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Carpaccio di Manzo</div><div class="menu-item-desc">Thinly sliced beef, arugula, parmesan shavings, capers</div></div><div class="menu-item-price">165,000₫</div></div>
+        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Insalata Caprese</div><div class="menu-item-desc">Fresh mozzarella, heirloom tomatoes, basil, balsamic glaze</div></div><div class="menu-item-price">125,000₫</div></div>
+        <div class="menu-item signature"><div class="menu-item-info"><div class="menu-item-name"><span class="sig-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="8" cy="8.5" rx="5.5" ry="4"/><path d="M8 4.5 C9.2 2.8 11.8 3 13 4"/><path d="M8 12.5 C6.8 14.2 4.2 14 3 13"/><path d="M5.5 8.5 Q8 6.5 10.5 8.5"/></svg></span>Tagliere Misto</div><div class="menu-item-desc">Selection of Italian cold cuts, aged cheeses, pickles, house bread</div></div><div class="menu-item-price">195,000₫</div></div>
+        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Zuppa del Giorno</div><div class="menu-item-desc">Chef's soup of the day</div></div><div class="menu-item-price">65,000₫</div></div>
+        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Calamari Fritti</div><div class="menu-item-desc">Crispy fried squid, marinara dipping sauce, lemon</div></div><div class="menu-item-price">145,000₫</div></div>
+      </div>
+    </div>
+
+    <!-- PIZZA -->
+    <div class="menu-panel" id="panel-pizza" role="tabpanel" aria-labelledby="tab-pizza">
+      <div class="menu-cat-header">
+        <div class="menu-cat-icon-lg"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="24" cy="24" r="20"/><line x1="24" y1="4" x2="24" y2="44"/><line x1="6.4" y1="14" x2="41.6" y2="34"/><line x1="6.4" y1="34" x2="41.6" y2="14"/><circle cx="16" cy="20" r="2.5" fill="currentColor" stroke="none"/><circle cx="28" cy="30" r="2.5" fill="currentColor" stroke="none"/></svg></div>
+        <div><div class="menu-cat-title">Pizza</div><div class="menu-cat-subtitle">Handmade · Italian style</div></div>
+      </div>
+      <div class="menu-items">
+        <div class="menu-item signature"><div class="menu-item-info"><div class="menu-item-name"><span class="sig-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="8" cy="8.5" rx="5.5" ry="4"/><path d="M8 4.5 C9.2 2.8 11.8 3 13 4"/><path d="M8 12.5 C6.8 14.2 4.2 14 3 13"/><path d="M5.5 8.5 Q8 6.5 10.5 8.5"/></svg></span>Margherita Classica</div><div class="menu-item-desc">San Marzano tomato, fior di latte mozzarella, fresh basil, olive oil</div></div><div class="menu-item-price">165,000₫</div></div>
+        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Quattro Formaggi</div><div class="menu-item-desc">Mozzarella, gorgonzola, parmesan, fontina, honey drizzle</div></div><div class="menu-item-price">185,000₫</div></div>
+        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Diavola</div><div class="menu-item-desc">Tomato, mozzarella, spicy salami, chili flakes, olive oil</div></div><div class="menu-item-price">175,000₫</div></div>
+        <div class="menu-item signature"><div class="menu-item-info"><div class="menu-item-name"><span class="sig-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="8" cy="8.5" rx="5.5" ry="4"/><path d="M8 4.5 C9.2 2.8 11.8 3 13 4"/><path d="M8 12.5 C6.8 14.2 4.2 14 3 13"/><path d="M5.5 8.5 Q8 6.5 10.5 8.5"/></svg></span>Limoncello Bianca</div><div class="menu-item-desc">White base, ricotta, zucchini, lemon zest, mint — our signature</div></div><div class="menu-item-price">195,000₫</div></div>
+        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Prosciutto e Rucola</div><div class="menu-item-desc">Tomato, mozzarella, Parma ham, arugula, parmesan</div></div><div class="menu-item-price">195,000₫</div></div>
+        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Funghi e Tartufo</div><div class="menu-item-desc">White base, mixed mushrooms, truffle oil, parmesan, thyme</div></div><div class="menu-item-price">215,000₫</div></div>
+      </div>
+    </div>
+
+    <!-- PASTA -->
+    <div class="menu-panel" id="panel-pasta" role="tabpanel" aria-labelledby="tab-pasta">
+      <div class="menu-cat-header">
+        <div class="menu-cat-icon-lg"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M24 8 C24 8 18 14 18 22 C18 30 24 34 24 42"/><path d="M24 8 C24 8 30 14 30 22 C30 30 24 34 24 42"/><path d="M16 10 C16 10 12 14 14 20"/><path d="M32 10 C32 10 36 14 34 20"/><ellipse cx="24" cy="26" rx="10" ry="6"/></svg></div>
+        <div><div class="menu-cat-title">Pasta</div><div class="menu-cat-subtitle">Fresh-made daily</div></div>
+      </div>
+      <div class="menu-items">
+        <div class="menu-item signature"><div class="menu-item-info"><div class="menu-item-name"><span class="sig-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="8" cy="8.5" rx="5.5" ry="4"/><path d="M8 4.5 C9.2 2.8 11.8 3 13 4"/><path d="M8 12.5 C6.8 14.2 4.2 14 3 13"/><path d="M5.5 8.5 Q8 6.5 10.5 8.5"/></svg></span>Cacio e Pepe</div><div class="menu-item-desc">Tonnarelli, pecorino romano, black pepper, olive oil — Roman classic</div></div><div class="menu-item-price">155,000₫</div></div>
+        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Carbonara</div><div class="menu-item-desc">Spaghetti, guanciale, egg yolk, pecorino, black pepper</div></div><div class="menu-item-price">165,000₫</div></div>
+        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Penne all'Arrabbiata</div><div class="menu-item-desc">Penne, spicy San Marzano tomato sauce, garlic, parsley</div></div><div class="menu-item-price">145,000₫</div></div>
+        <div class="menu-item signature"><div class="menu-item-info"><div class="menu-item-name"><span class="sig-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="8" cy="8.5" rx="5.5" ry="4"/><path d="M8 4.5 C9.2 2.8 11.8 3 13 4"/><path d="M8 12.5 C6.8 14.2 4.2 14 3 13"/><path d="M5.5 8.5 Q8 6.5 10.5 8.5"/></svg></span>Tagliatelle al Ragù</div><div class="menu-item-desc">Fresh tagliatelle, slow-braised Bolognese, parmesan — 6-hour ragu</div></div><div class="menu-item-price">175,000₫</div></div>
+        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Linguine alle Vongole</div><div class="menu-item-desc">Linguine, clams, white wine, garlic, parsley, chili</div></div><div class="menu-item-price">185,000₫</div></div>
+        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Pesto Genovese</div><div class="menu-item-desc">Trofie pasta, basil pesto, green beans, potato, parmesan</div></div><div class="menu-item-price">155,000₫</div></div>
+      </div>
+    </div>
+
+    <!-- MAIN COURSE -->
+    <div class="menu-panel" id="panel-main" role="tabpanel" aria-labelledby="tab-main">
+      <div class="menu-cat-header">
+        <div class="menu-cat-icon-lg"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="24" cy="24" r="16"/><line x1="18" y1="10" x2="18" y2="38"/><path d="M14 10 L14 20 C14 23 18 24 18 24"/><path d="M22 10 L22 20 C22 23 18 24 18 24"/><line x1="30" y1="10" x2="30" y2="18"/><path d="M27 18 C27 22 33 22 33 18 L33 10"/><line x1="30" y1="22" x2="30" y2="38"/></svg></div>
+        <div><div class="menu-cat-title">Main Course</div><div class="menu-cat-subtitle">Grilled meats &amp; seafood</div></div>
+      </div>
+      <div class="menu-items">
+        <div class="menu-item signature"><div class="menu-item-info"><div class="menu-item-name"><span class="sig-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="8" cy="8.5" rx="5.5" ry="4"/><path d="M8 4.5 C9.2 2.8 11.8 3 13 4"/><path d="M8 12.5 C6.8 14.2 4.2 14 3 13"/><path d="M5.5 8.5 Q8 6.5 10.5 8.5"/></svg></span>Branzino al Forno</div><div class="menu-item-desc">Whole baked sea bass, capers, olives, cherry tomato, herb oil</div></div><div class="menu-item-price">295,000₫</div></div>
+        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Pollo alla Parmigiana</div><div class="menu-item-desc">Breaded chicken, tomato sauce, mozzarella, basil, served with salad</div></div><div class="menu-item-price">215,000₫</div></div>
+        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Bistecca alla Griglia</div><div class="menu-item-desc">Grilled beef steak, rosemary butter, roasted potatoes, greens</div></div><div class="menu-item-price">345,000₫</div></div>
+        <div class="menu-item signature"><div class="menu-item-info"><div class="menu-item-name"><span class="sig-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="8" cy="8.5" rx="5.5" ry="4"/><path d="M8 4.5 C9.2 2.8 11.8 3 13 4"/><path d="M8 12.5 C6.8 14.2 4.2 14 3 13"/><path d="M5.5 8.5 Q8 6.5 10.5 8.5"/></svg></span>Saltimbocca alla Romana</div><div class="menu-item-desc">Veal escalope, prosciutto, sage, white wine — traditional Roman dish</div></div><div class="menu-item-price">265,000₫</div></div>
+      </div>
+    </div>
+
+    <!-- LUNCH COMBO -->
+    <div class="menu-panel" id="panel-lunch" role="tabpanel" aria-labelledby="tab-lunch">
+      <div class="menu-cat-header">
+        <div class="menu-cat-icon-lg"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="14" width="32" height="24" rx="3"/><path d="M16 14 V10 A8 8 0 0 1 32 10 V14"/><line x1="24" y1="22" x2="24" y2="30"/><line x1="20" y1="26" x2="28" y2="26"/></svg></div>
+        <div><div class="menu-cat-title">Lunch Combo</div><div class="menu-cat-subtitle">Available 11AM – 2PM daily</div></div>
+      </div>
+      <div class="menu-items">
+        <div class="menu-item signature"><div class="menu-item-info"><div class="menu-item-name"><span class="sig-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="8" cy="8.5" rx="5.5" ry="4"/><path d="M8 4.5 C9.2 2.8 11.8 3 13 4"/><path d="M8 12.5 C6.8 14.2 4.2 14 3 13"/><path d="M5.5 8.5 Q8 6.5 10.5 8.5"/></svg></span>Combo A — Pizza Set</div><div class="menu-item-desc">Choice of pizza + house salad + soft drink</div></div><div class="menu-item-price">199,000₫</div></div>
+        <div class="menu-item signature"><div class="menu-item-info"><div class="menu-item-name"><span class="sig-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="8" cy="8.5" rx="5.5" ry="4"/><path d="M8 4.5 C9.2 2.8 11.8 3 13 4"/><path d="M8 12.5 C6.8 14.2 4.2 14 3 13"/><path d="M5.5 8.5 Q8 6.5 10.5 8.5"/></svg></span>Combo B — Pasta Set</div><div class="menu-item-desc">Choice of pasta + soup of the day + soft drink</div></div><div class="menu-item-price">199,000₫</div></div>
+        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Combo C — Business Lunch</div><div class="menu-item-desc">Antipasto + pasta or pizza + dessert of the day + coffee</div></div><div class="menu-item-price">269,000₫</div></div>
+        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Combo D — Light Lunch</div><div class="menu-item-desc">Insalata Caprese + Bruschetta + soft drink</div></div><div class="menu-item-price">149,000₫</div></div>
+      </div>
+    </div>
+
+    <p style="margin-top:32px;font-size:12px;color:var(--text-muted);text-align:center;letter-spacing:.06em">● Signature dishes &nbsp;·&nbsp; All prices include VAT &nbsp;·&nbsp; Menu may change seasonally</p>
+  </div>
+</section>
+
+<div class="reserve-cta">
+  <div class="reserve-cta-inner">
+    <h2>Dinner tastes better<br><span>with a table waiting.</span></h2>
+    <p>Evenings and weekends can fill quickly. Reserve ahead and arrive knowing your table is ready.</p>
+    <div class="reserve-cta-btns">
+      <a href="https://www.google.com/maps/reserve/v/dine/c/vnw1q-YBfnQ" class="btn-primary">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Book My Table
+      </a>
+      <a href="https://www.facebook.com/limoncellovn/" class="btn-outline-white">Message Us</a>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════
+     ABOUT PAGE
+════════════════════════════ -->
+<div class="page-break" id="page-about">↓ &nbsp;<span>About Page</span>&nbsp; — &nbsp;/about-us/&nbsp; ↓</div>
+
+<nav class="nav" style="position:relative;top:auto">
+  <div class="nav-logo">Limoncello<span>.</span></div>
+  <ul class="nav-links"><li><a href="#page-home">Home</a></li><li><a href="#page-menu">Menu</a></li><li><a href="#page-about" class="active">About</a></li><li><a href="#page-contact">Contact</a></li></ul>
+  <div class="nav-right">
+    <div class="nav-social">
+      <a href="https://www.facebook.com/limoncellovn/"><svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+      <a href="https://www.instagram.com/limoncello__danang/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+    </div>
+    <a href="https://www.google.com/maps/reserve/v/dine/c/vnw1q-YBfnQ" class="btn-reserve desktop-only">Reserve a Table</a>
+    <a href="https://www.google.com/maps/reserve/v/dine/c/vnw1q-YBfnQ" class="btn-reserve-mobile" title="Reserve a Table" aria-label="Reserve a Table"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></a>
+  </div>
+</nav>
+
+<section class="about-page-hero">
+  <div class="about-page-hero-bg"></div>
+  <div style="position:relative;z-index:2;padding:0 72px 56px">
+    <div class="label on-dark" style="margin-bottom:12px">Our Story</div>
+    <h1 style="font-family:var(--font-display);font-size:clamp(48px,8vw,88px);font-weight:600;font-style:italic;color:#fff;line-height:.92;letter-spacing:-.02em">Our <span style="color:var(--lemon)">Story</span>.</h1>
+  </div>
+</section>
+
+<section class="about-story">
+  <div class="about-story-inner">
+    <div class="label">Our History</div>
+    <h2 class="heading" style="margin-bottom:32px">Italian tradition,<br>settled in Đà Nẵng</h2>
+    <p>Since 2014, Limoncello has welcomed guests into a dining room built around honest Italian cooking and easy conversation. The idea has always been simple: serve food with care, make people feel looked after, and let the table do the rest.</p>
+    <p>Our pizzas are prepared by hand and baked with care. Our pasta is made fresh, our sauces are given time, and our kitchen keeps close to the flavours that made Italian food loved around the world.</p>
+    <p>Imported cheeses, cured meats, olive oils, and Italian staples sit alongside the freshness of Vietnam's coast and markets. The result feels unmistakably Italian, but completely at home in Đà Nẵng.</p>
+  </div>
+</section>
+
+<section class="about-values">
+  <div class="about-values-inner">
+    <div class="label">Why Limoncello</div>
+    <h2 class="heading">What we stand for</h2>
+    <div class="values-grid">
+      <div class="value-card reveal">
+        <div class="value-icon"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M24 4 L28 16 L40 16 L30 24 L34 36 L24 28 L14 36 L18 24 L8 16 L20 16 Z"/></svg></div>
+        <div class="value-title">Real Italian Cooking</div>
+        <div class="value-text">We keep the food grounded in Italian technique: simple ingredients, careful timing, and no unnecessary fuss.</div>
+      </div>
+      <div class="value-card reveal" style="transition-delay:.1s">
+        <div class="value-icon"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="24" cy="20" r="10"/><path d="M8 40 C8 32 16 28 24 28 C32 28 40 32 40 40"/></svg></div>
+        <div class="value-title">Warm Hospitality</div>
+        <div class="value-text">Service should feel attentive without feeling formal: genuine, relaxed, and ready with a good recommendation.</div>
+      </div>
+      <div class="value-card reveal" style="transition-delay:.2s">
+        <div class="value-icon"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 36 C12 36 8 28 8 20 C8 12 16 6 24 6 C32 6 40 12 40 20 C40 28 36 36 36 36"/><path d="M18 36 L30 36 L28 44 L20 44 Z"/><line x1="24" y1="36" x2="24" y2="24"/></svg></div>
+        <div class="value-title">Since 2014 in Đà Nẵng</div>
+        <div class="value-text">Years of cooking for locals, travellers, families, and regulars who return for a familiar table.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="reserve-cta">
+  <div class="reserve-cta-inner">
+    <h2>Save a place<br><span>at our table.</span></h2>
+    <p>Walk-ins are welcome, but booking ahead is the easiest way to keep the evening unhurried.</p>
+    <div class="reserve-cta-btns">
+      <a href="https://www.google.com/maps/reserve/v/dine/c/vnw1q-YBfnQ" class="btn-primary">Book My Table</a>
+      <a href="#page-menu" class="btn-outline-white">Explore the Menu</a>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════
+     CONTACT PAGE
+════════════════════════════ -->
+<div class="page-break" id="page-contact">↓ &nbsp;<span>Contact Page</span>&nbsp; — &nbsp;/contact/&nbsp; ↓</div>
+
+<nav class="nav" style="position:relative;top:auto">
+  <div class="nav-logo">Limoncello<span>.</span></div>
+  <ul class="nav-links"><li><a href="#page-home">Home</a></li><li><a href="#page-menu">Menu</a></li><li><a href="#page-about">About</a></li><li><a href="#page-contact" class="active">Contact</a></li></ul>
+  <div class="nav-right">
+    <div class="nav-social">
+      <a href="https://www.facebook.com/limoncellovn/"><svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+      <a href="https://www.instagram.com/limoncello__danang/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+    </div>
+    <a href="https://www.google.com/maps/reserve/v/dine/c/vnw1q-YBfnQ" class="btn-reserve desktop-only">Reserve a Table</a>
+    <a href="https://www.google.com/maps/reserve/v/dine/c/vnw1q-YBfnQ" class="btn-reserve-mobile" title="Reserve a Table" aria-label="Reserve a Table"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></a>
+  </div>
+</nav>
+
+<section style="background:var(--green);padding:64px 0 56px">
+  <div style="max-width:1160px;margin:0 auto;padding:0 72px">
+    <div class="label on-dark" style="margin-bottom:12px">Visit Limoncello</div>
+    <h1 style="font-family:var(--font-display);font-size:clamp(44px,7vw,80px);font-weight:600;font-style:italic;color:#fff;line-height:.92;letter-spacing:-.02em">Join us <span style="color:var(--lemon)">in Đà Nẵng</span>.</h1>
+  </div>
+</section>
+
+<section class="contact-page">
+  <div class="contact-inner">
+    <div>
+      <!-- Phone — tap-to-call on mobile -->
+      <div class="contact-info-block">
+        <div class="contact-info-label">Phone</div>
+        <a href="tel:+84XXXXXXXXX" style="display:inline-flex;align-items:center;gap:10px;margin-top:4px;text-decoration:none">
+          <span class="contact-info-value" style="border-bottom:2px solid var(--lemon);padding-bottom:2px;transition:color .2s" onmouseover="this.style.color='var(--lemon-deep)'" onmouseout="this.style.color=''">+84 XX XXX XXXX</span>
+        </a>
+        <!-- Mobile-only tap-to-call button -->
+        <div class="tap-call-btn">
+          <a href="tel:+84XXXXXXXXX">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.38 2 2 0 0 1 3.58 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.96a16 16 0 0 0 6.29 6.29l1.42-1.42a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            Call the Restaurant
+          </a>
+        </div>
+        <div class="contact-info-sub">Call us for same-day questions or group booking details</div>
+      </div>
+
+      <!-- Address — tap-to-navigate -->
+      <div class="contact-info-block">
+        <div class="contact-info-label">Address</div>
+        <div class="contact-info-value">Đà Nẵng, Vietnam</div>
+        <div class="contact-info-sub">Open the map for directions to the restaurant</div>
+        <!-- Tap-to-navigate: opens Google Maps / Apple Maps -->
+        <a href="https://maps.google.com/?q=Limoncello+Restaurant+Da+Nang" target="_blank" class="tap-nav-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
+          Open Directions
+        </a>
+      </div>
+
+      <!-- Hours -->
+      <div class="contact-info-block">
+        <div class="contact-info-label">Hours</div>
+        <div class="contact-info-value">11:00 AM – 10:00 PM</div>
+        <div class="contact-info-sub">Open every day · Kitchen closes 9:30 PM</div>
+      </div>
+
+      <!-- Reserve -->
+      <div class="contact-info-block">
+        <div class="contact-info-label">Reservations</div>
+        <div class="contact-info-sub" style="margin-top:4px">
+          <a href="https://www.google.com/maps/reserve/v/dine/c/vnw1q-YBfnQ" class="btn-primary" style="font-size:11px;padding:12px 24px">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            Book on Google Reserve
+          </a>
+        </div>
+      </div>
+
+      <!-- Social -->
+      <div class="contact-info-block">
+        <div class="contact-info-label">Follow Us</div>
+        <div style="display:flex;gap:10px;margin-top:8px;flex-wrap:wrap">
+          <a href="https://www.facebook.com/limoncellovn/" class="social-link" style="background:var(--green)"><svg viewBox="0 0 24 24" fill="currentColor" width="15" height="15"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>Facebook</a>
+          <a href="https://www.instagram.com/limoncello__danang/" class="social-link" style="background:var(--green)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="15" height="15"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>Instagram</a>
+        </div>
+      </div>
+
+      <div class="contact-map-placeholder">Google Maps Embed<br><small style="font-size:13px">(iframe trong WordPress)</small></div>
+    </div>
+    <div>
+      <div class="contact-form-wrap">
+        <div class="contact-form-title">Send us a message</div>
+        <div class="contact-form-sub">Questions, celebrations, group bookings — tell us what you are planning.</div>
+        <!-- Fix #2: Proper Form UI Component — defines visual spec for Dev -->
+        <form class="contact-form" onsubmit="return false" novalidate>
+          <div class="contact-form-row">
+            <!-- Floating label: input first, label second, placeholder=" " -->
+            <div class="contact-form-field contact-form-float">
+              <input type="text" id="cf-name" class="contact-form-input" placeholder=" " autocomplete="name">
+              <label class="contact-form-label" for="cf-name">Name</label>
+            </div>
+            <!-- Demo: error state on email field -->
+            <div class="contact-form-field contact-form-float is-error">
+              <input type="email" id="cf-email" class="contact-form-input" placeholder=" " autocomplete="email" value="not-an-email">
+              <label class="contact-form-label" for="cf-email">Email</label>
+              <div class="contact-form-error-msg">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                Please enter a valid email address
+              </div>
+            </div>
+          </div>
+          <div class="contact-form-field contact-form-float">
+            <input type="tel" id="cf-phone" class="contact-form-input" placeholder=" " autocomplete="tel">
+            <label class="contact-form-label" for="cf-phone">Phone <span style="font-weight:400;font-size:10px;opacity:.6">(optional)</span></label>
+          </div>
+          <div class="contact-form-field contact-form-float">
+            <input type="text" id="cf-subject" class="contact-form-input" placeholder=" ">
+            <label class="contact-form-label" for="cf-subject">Subject</label>
+          </div>
+          <div class="contact-form-field contact-form-float">
+            <textarea id="cf-msg" class="contact-form-textarea" placeholder=" "></textarea>
+            <label class="contact-form-label" for="cf-msg">Message</label>
+          </div>
+          <button type="submit" class="btn-primary" style="width:100%;justify-content:center;padding:16px 24px;font-size:12px;letter-spacing:.18em">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            Send My Message
+          </button>
+        </form>
+        <div class="form-spec-note">
+          <p><strong>Dev note:</strong> WPForms / CF7 shortcode replaces this markup. Child theme CSS overrides ensure: <strong>1.5px border → var(--lemon) on focus</strong>, 48px min-height inputs (touch target), submit inherits <code>.btn-primary</code> style.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════
+     DESIGN SYSTEM
+════════════════════════════ -->
+<div class="page-break" id="page-design" style="background:#0a0a0a">↓ &nbsp;<span>Color Palette</span>&nbsp; — &nbsp;Design System Reference&nbsp; ↓</div>
+
+<div class="ds">
+  <div class="ds-row">
+    <h3>Color Palette — Limoncello 2026</h3>
+    <div class="swatches">
+      <div><div class="swatch-block" style="background:#F2C12E"></div><div class="swatch-name">Limoncello Yellow</div><div class="swatch-hex">#F2C12E — Primary CTA</div></div>
+      <div><div class="swatch-block" style="background:#C99A0A"></div><div class="swatch-name">Deep Gold</div><div class="swatch-hex">#C99A0A — Text on light bg</div></div>
+      <div><div class="swatch-block" style="background:#FDF5C7"></div><div class="swatch-name">Lemon Light</div><div class="swatch-hex">#FDF5C7 — BG tint</div></div>
+      <div><div class="swatch-block" style="background:#0F0F0F"></div><div class="swatch-name">Black</div><div class="swatch-hex">#0F0F0F — Primary dark (nav, footer)</div></div>
+      <div><div class="swatch-block" style="background:#1C1C1C"></div><div class="swatch-name">Charcoal</div><div class="swatch-hex">#1C1C1C — Secondary dark</div></div>
+      <div><div class="swatch-block" style="background:#3D6B50"></div><div class="swatch-name">Green Light</div><div class="swatch-hex">#3D6B50 — Accent touches</div></div>
+      <div><div class="swatch-block" style="background:#E8F0EC;border:1px solid #ccc"></div><div class="swatch-name">Green Pale</div><div class="swatch-hex">#E8F0EC — Section bg tint</div></div>
+      <div><div class="swatch-block" style="background:#FEF6E4"></div><div class="swatch-name">Cream</div><div class="swatch-hex">#FEF6E4 — Warm section bg</div></div>
+      <div><div class="swatch-block" style="background:#FFFDF6;border:1px solid #ccc"></div><div class="swatch-name">Warm White</div><div class="swatch-hex">#FFFDF6 — Page bg</div></div>
+    </div>
+    <div class="wcag-note">
+      <p><strong>WCAG Accessibility Rule:</strong> <code>#F2C12E</code> (Yellow) — use as button background with Black text, or as accent text on dark/black backgrounds. Never use as text on white/cream — fails WCAG AA. Use <strong>#C99A0A (Deep Gold)</strong> for yellow text on light backgrounds. <code>#3D6B50</code> (Green Light) passes WCAG AA on white — safe for accent text and borders.</p>
+    </div>
+  </div>
+
+</div>
+
+<!-- ════════════════════════════
+     JAVASCRIPT
+════════════════════════════ -->
+<script>
+/* ── Smart sticky nav ── */
+const nav = document.getElementById('mainNav');
+let lastY = 0;
+window.addEventListener('scroll', () => {
+  const y = window.scrollY;
+  if (y > lastY && y > 100) nav.classList.add('hidden');
+  else nav.classList.remove('hidden');
+  lastY = y;
+}, { passive: true });
+
+/* ── Hero parallax ── */
+const heroBg = document.getElementById('heroBg');
+if (heroBg) {
+  setTimeout(() => heroBg.classList.add('loaded'), 80);
+  window.addEventListener('scroll', () => {
+    if (window.scrollY < window.innerHeight)
+      heroBg.style.transform = `scale(1) translateY(${window.scrollY * 0.22}px)`;
+  }, { passive: true });
+}
+
+/* ── Hamburger / mobile menu — iOS-safe scroll lock ── */
+const burger = document.getElementById('navBurger');
+const mobileMenu = document.getElementById('mobileMenu');
+let _scrollY = 0;
+
+function lockScroll() {
+  _scrollY = window.scrollY;
+  document.body.style.position = 'fixed';
+  document.body.style.top = `-${_scrollY}px`;
+  document.body.style.width = '100%';
+  document.body.style.overflowY = 'scroll'; /* prevents layout shift from scrollbar */
+}
+function unlockScroll() {
+  document.body.style.position = '';
+  document.body.style.top = '';
+  document.body.style.width = '';
+  document.body.style.overflowY = '';
+  window.scrollTo(0, _scrollY); /* restore exact scroll position */
+}
+
+if (burger && mobileMenu) {
+  burger.addEventListener('click', () => {
+    const isOpen = mobileMenu.classList.toggle('open');
+    burger.classList.toggle('open');
+    isOpen ? lockScroll() : unlockScroll();
+  });
+  mobileMenu.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => {
+      burger.classList.remove('open');
+      mobileMenu.classList.remove('open');
+      unlockScroll();
+    });
+  });
+}
+
+/* ── Menu tabs — with ARIA sync (Fix #3) ── */
+document.querySelectorAll('.menu-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    const panel = tab.dataset.panel;
+    const container = tab.closest('.menu-section-inner');
+    // Deactivate all tabs
+    container.querySelectorAll('.menu-tab').forEach(t => {
+      t.classList.remove('active');
+      t.setAttribute('aria-selected', 'false');
+      t.tabIndex = -1;
+    });
+    // Hide all panels
+    container.querySelectorAll('.menu-panel').forEach(p => {
+      p.classList.remove('active');
+      p.setAttribute('aria-hidden', 'true');
+    });
+    // Activate clicked tab
+    tab.classList.add('active');
+    tab.setAttribute('aria-selected', 'true');
+    tab.tabIndex = 0;
+    // Show target panel
+    const panelEl = document.getElementById('panel-' + panel);
+    if (panelEl) {
+      panelEl.classList.add('active');
+      panelEl.setAttribute('aria-hidden', 'false');
+    }
+  });
+});
+
+/* ── Guest reviews carousel — randomize 15 reviews per page load ── */
+const reviewData = [
+  { name: 'Mathew Wolford', quote: 'Best Italian food in Da Nang. The pizza is absolutely incredible, and we come back every time we are in town.' },
+  { name: 'Ashleigh Roche', quote: 'Wonderful atmosphere, attentive service, and the pasta is as good as anything I have had in Italy. Highly recommend.' },
+  { name: 'Nguyen Hieu Nhon', quote: 'Fantastic restaurant. Great food, cozy space, and very friendly staff. Will definitely come back.' },
+  { name: 'Sophie Laurent', quote: 'A warm little Italian escape in Da Nang. The burrata, pasta, and wine made the evening feel special.' },
+  { name: 'Daniel Park', quote: 'Excellent service from start to finish. The carbonara was rich, balanced, and served perfectly hot.' },
+  { name: 'Mia Tran', quote: 'Lovely dinner with friends. The restaurant feels intimate without being too quiet, and every dish was well seasoned.' },
+  { name: 'Luca Bianchi', quote: 'Real Italian flavors, good ingredients, and a team that clearly cares. The pizza dough was the highlight.' },
+  { name: 'Emma Wilson', quote: 'We booked for a birthday dinner and everything was handled beautifully. Great food and a very welcoming team.' },
+  { name: 'Minh Anh', quote: 'Fresh pasta, generous portions, and a relaxed atmosphere. It is one of our favorite dinner spots in Da Nang.' },
+  { name: 'James Carter', quote: 'The seafood pasta was excellent and the tiramisu was even better. Easy recommendation for Italian food.' },
+  { name: 'Hannah Lee', quote: 'Cozy, polished, and consistently good. The staff were attentive without rushing our table.' },
+  { name: 'Roberto Silva', quote: 'Simple Italian cooking done right. The ingredients tasted fresh and the whole meal felt honest.' },
+  { name: 'Olivia Martin', quote: 'Perfect spot for a slow dinner. The wine pairing suggestion was thoughtful and the service was charming.' },
+  { name: 'Khanh Nguyen', quote: 'The pizza crust had great texture, the pasta was flavorful, and the space felt comfortable for family dinner.' },
+  { name: 'Ari Tanaka', quote: 'Beautiful food and calm hospitality. We came for lunch and ended up booking again for dinner.' }
+];
+
+function shuffleReviews(items) {
+  const copy = [...items];
+  for (let i = copy.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy;
+}
+
+const reviewsTrack = document.getElementById('reviewsTrack');
+const reviewsDots = document.getElementById('reviewsDots');
+const reviewsPrev = document.getElementById('reviewsPrev');
+const reviewsNext = document.getElementById('reviewsNext');
+
+if (reviewsTrack && reviewsDots && reviewsPrev && reviewsNext) {
+  let reviewsPage = 0;
+  let reviewTimer;
+  const reviews = shuffleReviews(reviewData);
+
+  reviews.forEach((review, index) => {
+    const card = document.createElement('article');
+    card.className = 'review-card reveal';
+    card.style.transitionDelay = `${(index % 3) * 0.08}s`;
+
+    const stars = document.createElement('div');
+    stars.className = 'review-stars';
+    stars.textContent = '★★★★★';
+
+    const quote = document.createElement('p');
+    quote.className = 'review-quote';
+    quote.textContent = `"${review.quote}"`;
+
+    const author = document.createElement('div');
+    author.className = 'review-author';
+
+    const avatar = document.createElement('div');
+    avatar.className = 'review-avatar';
+    avatar.textContent = review.name.charAt(0);
+
+    const authorText = document.createElement('div');
+    const name = document.createElement('div');
+    name.className = 'review-name';
+    name.textContent = review.name;
+
+    const source = document.createElement('div');
+    source.className = 'review-src';
+    source.textContent = 'Google Reviews · 5 stars';
+
+    authorText.append(name, source);
+    author.append(avatar, authorText);
+    card.append(stars, quote, author);
+    reviewsTrack.appendChild(card);
+  });
+
+  const getReviewsPerView = () => {
+    if (window.matchMedia('(max-width: 768px)').matches) return 1;
+    if (window.matchMedia('(max-width: 1024px)').matches) return 2;
+    return 3;
+  };
+
+  const renderReviewDots = () => {
+    const pages = Math.ceil(reviews.length / getReviewsPerView());
+    reviewsDots.replaceChildren();
+    for (let i = 0; i < pages; i++) {
+      const dot = document.createElement('button');
+      dot.type = 'button';
+      dot.className = 'reviews-dot';
+      dot.setAttribute('aria-label', `Show review page ${i + 1}`);
+      dot.addEventListener('click', () => {
+        reviewsPage = i;
+        updateReviews();
+        restartReviewTimer();
+      });
+      reviewsDots.appendChild(dot);
+    }
+  };
+
+  const updateReviews = () => {
+    const perView = getReviewsPerView();
+    const pages = Math.ceil(reviews.length / perView);
+    const maxStart = Math.max(reviews.length - perView, 0);
+    reviewsPage = (reviewsPage + pages) % pages;
+    const start = Math.min(reviewsPage * perView, maxStart);
+    const firstCard = reviewsTrack.querySelector('.review-card');
+    if (!firstCard) return;
+    const gap = parseFloat(getComputedStyle(reviewsTrack).gap) || 0;
+    reviewsTrack.style.transform = `translateX(-${start * (firstCard.offsetWidth + gap)}px)`;
+    reviewsDots.querySelectorAll('.reviews-dot').forEach((dot, index) => {
+      dot.classList.toggle('active', index === reviewsPage);
+    });
+  };
+
+  const restartReviewTimer = () => {
+    window.clearInterval(reviewTimer);
+    reviewTimer = window.setInterval(() => {
+      reviewsPage += 1;
+      updateReviews();
+    }, 5200);
+  };
+
+  reviewsPrev.addEventListener('click', () => {
+    reviewsPage -= 1;
+    updateReviews();
+    restartReviewTimer();
+  });
+  reviewsNext.addEventListener('click', () => {
+    reviewsPage += 1;
+    updateReviews();
+    restartReviewTimer();
+  });
+  window.addEventListener('resize', () => {
+    renderReviewDots();
+    updateReviews();
+  });
+
+  renderReviewDots();
+  updateReviews();
+  restartReviewTimer();
+}
+
+/* ── Scroll reveal ── */
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1, rootMargin: '0px 0px -48px 0px' });
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+/* ── B1: Tabs scroll hint — hide arrow when scrolled to end ── */
+const menuTabsEl = document.querySelector('.menu-tabs');
+if (menuTabsEl) {
+  const wrap = menuTabsEl.closest('.menu-tabs-wrap');
+  const checkTabsScroll = () => {
+    const atEnd = menuTabsEl.scrollLeft + menuTabsEl.clientWidth >= menuTabsEl.scrollWidth - 8;
+    wrap.classList.toggle('tabs-at-end', atEnd);
+  };
+  menuTabsEl.addEventListener('scroll', checkTabsScroll, { passive: true });
+  window.addEventListener('resize', checkTabsScroll);
+  checkTabsScroll();
+}
+
+/* ── Extra: Photo skeleton — remove loading when image loaded ── */
+document.querySelectorAll('.photo-cell.loading img').forEach(img => {
+  const done = () => img.closest('.photo-cell').classList.remove('loading');
+  if (img.complete && img.naturalWidth > 0) { done(); }
+  else { img.addEventListener('load', done); img.addEventListener('error', done); }
+});
+
+/* ── Extra: Back to Top — show after first full viewport scroll ── */
+const btt = document.getElementById('backToTop');
+if (btt) {
+  window.addEventListener('scroll', () => {
+    btt.classList.toggle('visible', window.scrollY > window.innerHeight * 0.8);
+  }, { passive: true });
+  btt.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+}
+</script>
+
+<!-- Back to Top -->
+<button class="back-to-top" id="backToTop" aria-label="Back to top">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
+</button>
+</body>
+</html>
