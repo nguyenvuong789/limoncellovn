@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Limoncello — Design Proposal Demo 3</title>
+<title>Limoncello Restaurant & Pizzeria · Đà Nẵng</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600;1,700&family=Raleway:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -72,11 +72,16 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
 .nav.hidden { transform: translateY(-100%); }
 
 .nav-logo {
-  font-family: var(--font-display);
-  font-size: 26px; font-weight: 600; font-style: italic;
-  color: var(--lemon); letter-spacing: -.02em; flex-shrink: 0;
+  display: flex; align-items: center;
+  width: 168px; height: calc(var(--nav-h) - 18px);
+  flex-shrink: 0;
 }
-.nav-logo span { color: #fff; }
+.nav-logo img {
+  display: block;
+  width: 100%; height: 100%;
+  object-fit: contain; object-position: left center;
+  filter: drop-shadow(0 1px 3px rgba(0,0,0,.28));
+}
 
 .nav-links {
   display: flex; gap: 32px; list-style: none;
@@ -204,6 +209,24 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
   transition: background .2s, transform .2s, box-shadow .2s;
 }
 .btn-primary:hover { background: var(--lemon-deep); color: #fff; transform: translateY(-2px); box-shadow: 0 10px 28px rgba(242,193,46,.35); }
+
+.dietary-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  margin-top: 16px;
+  padding: 9px 13px;
+  border: 1px solid rgba(242,193,46,.35);
+  background: rgba(242,193,46,.1);
+  color: var(--lemon);
+  font-size: 10px; font-weight: 700;
+  letter-spacing: .14em; text-transform: uppercase;
+}
+.dietary-badge.on-light {
+  margin-top: 12px;
+  border-color: rgba(61,107,80,.18);
+  background: rgba(61,107,80,.07);
+  color: var(--green);
+}
+.dietary-badge svg { width: 14px; height: 14px; flex-shrink: 0; }
 
 .btn-outline-white {
   display: inline-flex; align-items: center; gap: 10px;
@@ -338,10 +361,10 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
 .about-img-wrap { position: relative; z-index: 1; padding-bottom: 24px; padding-right: 24px; }
 .about-img-wrap::before { content: ""; position: absolute; top: 24px; left: 24px; right: 0; bottom: 0; border: 1.5px solid var(--green); opacity: 0.12; border-radius: 4px; z-index: 0; }
 .about-img-main {
-  width: 100%; aspect-ratio: 4/5; object-fit: cover;
+  width: 100%; aspect-ratio: 5/4; object-fit: cover; object-position: center 54%;
   border-radius: 4px;
   box-shadow: 16px 24px 64px rgba(27, 56, 41, 0.08);
-  filter: sepia(0.2) saturate(0.85);
+  filter: sepia(0.08) saturate(0.98);
   background: linear-gradient(135deg, var(--green) 0%, var(--green-mid) 100%);
   display: flex; align-items: center; justify-content: center;
   font-family: var(--font-display); font-style: italic;
@@ -354,6 +377,7 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
 }
 .about-badge-num { font-family: var(--font-display); font-size: 48px; font-weight: 700; color: var(--green); line-height: 1; }
 .about-badge-text { font-size: 10px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--green); margin-top: 5px; line-height: 1.4; }
+.text-nowrap { white-space: nowrap; }
 
 /* ═══════════════════════════════════════════
    MENU TEASER — SVG icons, no emojis
@@ -569,7 +593,12 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
   display: grid; grid-template-columns: 2fr 1fr 1fr 1.5fr;
   gap: 52px; margin-bottom: 52px;
 }
-.footer-logo { font-family: var(--font-display); font-size: 36px; font-weight: 700; font-style: italic; color: var(--lemon); line-height: 1; margin-bottom: 14px; }
+.footer-logo { margin-bottom: 18px; }
+.footer-logo img {
+  display: block;
+  width: 228px; max-width: 100%; height: auto;
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,.28));
+}
 .footer-tag { font-size: 13px; color: rgba(255,255,255,.45); line-height: 1.7; margin-bottom: 24px; max-width: 240px; }
 .footer-social { display: flex; gap: 10px; }
 .footer-social a { width: 38px; height: 38px; border: 1px solid rgba(255,255,255,.14); display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,.45); transition: border-color .2s, color .2s; }
@@ -665,6 +694,7 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
   letter-spacing: .24em; text-transform: uppercase;
 }
 .page-break span { color: var(--lemon); }
+.section-anchor { height: 0; scroll-margin-top: var(--nav-h); }
 
 /* ═══════════════════════════════════════════
    MENU PAGE — HERO
@@ -677,7 +707,7 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
   position: absolute; inset: 0;
   background:
     linear-gradient(to right, rgba(0,0,0,.92) 38%, rgba(0,0,0,.35) 100%),
-    url('wp-content/uploads/2026/03/z6611401263097_90992c597c3158a69ba1840d4b9c1a28.jpg') center/cover no-repeat;
+    url('wp-content/uploads/2026/05/limoncello-branded-pasta.jpg') center/cover no-repeat;
 }
 .menu-hero-content { position: relative; z-index: 2; padding: 0 72px 64px; }
 .menu-hero-title { font-family: var(--font-display); font-size: clamp(52px, 8vw, 96px); font-weight: 600; font-style: italic; color: #fff; line-height: .92; letter-spacing: -.02em; margin: 14px 0 22px; }
@@ -778,10 +808,19 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
 }
 .sig-icon svg { width: 100%; height: 100%; }
 .menu-item-desc { font-size: 13px; color: var(--text-muted); line-height: 1.65; }
+.menu-panel-note {
+  margin: -18px 0 32px;
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.7;
+}
 .menu-item-price {
   font-family: var(--font-display);
   font-size: 18px; font-weight: 700;
-  color: var(--green); white-space: nowrap; flex-shrink: 0;
+  color: var(--green); white-space: normal; flex-shrink: 0;
+  max-width: 44%;
+  text-align: right;
+  line-height: 1.25;
   padding-top: 2px;
 }
 /* ── B1: Tabs scroll hint arrow ── */
@@ -891,7 +930,7 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
   position: absolute; inset: 0;
   background:
     linear-gradient(to bottom, rgba(0,0,0,.55) 0%, rgba(0,0,0,.88) 100%),
-    url('wp-content/uploads/2021/04/Limoncello.jpg') center/cover no-repeat;
+    url('wp-content/uploads/2026/05/limoncello-interior-brick.jpg') center/cover no-repeat;
 }
 .about-story { padding: 96px 0; background: var(--warm-white); }
 .about-story-inner { max-width: 860px; margin: 0 auto; padding: 0 72px; }
@@ -947,11 +986,50 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
   .tap-nav-btn { width: 100%; justify-content: center; padding: 14px 20px; font-size: 13px; }
 }
 
-.contact-map-placeholder {
-  aspect-ratio: 16/10; background: var(--green);
-  display: flex; align-items: center; justify-content: center;
-  font-family: var(--font-display); font-size: 18px; font-style: italic;
-  color: rgba(255,255,255,.3); text-align: center; padding: 20px;
+.contact-map {
+  position: sticky; top: calc(var(--nav-h) + 24px);
+  min-height: 520px;
+  background: var(--green);
+  overflow: hidden;
+  box-shadow: 16px 24px 64px rgba(27, 56, 41, 0.08);
+}
+.contact-map iframe {
+  width: 100%; height: 520px; display: block; border: 0;
+  filter: saturate(.85) contrast(.98);
+}
+.contact-map-caption {
+  position: absolute; left: 18px; right: 18px; bottom: 18px;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  background: rgba(15,15,15,.88);
+  color: #fff;
+  padding: 14px 16px;
+}
+.contact-map-caption strong {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-style: italic;
+  color: var(--lemon);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.contact-map-caption span { display: block; font-size: 12px; color: rgba(255,255,255,.68); line-height: 1.45; }
+.contact-map-caption a {
+  flex-shrink: 0;
+  background: var(--lemon); color: var(--green);
+  padding: 10px 14px;
+  font-size: 10px; font-weight: 700;
+  letter-spacing: .12em; text-transform: uppercase;
+}
+@media (max-width: 768px) {
+  .contact-map { position: relative; top: auto; min-height: 420px; order: -1; }
+  .contact-map iframe { height: 420px; }
+  .contact-map-caption {
+    left: 12px; right: 12px; bottom: 12px;
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .contact-map-caption a { width: 100%; text-align: center; }
 }
 .contact-form-wrap { background: var(--cream); padding: 44px; }
 .contact-form-title { font-family: var(--font-display); font-size: 30px; font-weight: 600; font-style: italic; color: var(--green); margin-bottom: 8px; }
@@ -1047,6 +1125,7 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
 /* Tablet: ≤ 1024px */
 @media (max-width: 1024px) {
   .nav { padding: 0 28px; }
+  .section-nav { display: none; }
   .nav-links, .nav-social { display: none; }
   .btn-reserve.desktop-only { display: none; }
   .btn-reserve-mobile { display: flex; }
@@ -1092,7 +1171,7 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
   }
 
   .nav { padding: 0 20px; }
-  .nav-logo { font-size: 22px; }
+  .nav-logo { width: 138px; height: 42px; }
 
   /* Hero */
   .hero { min-height: 86svh; height: auto; max-height: none; }
@@ -1101,6 +1180,7 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
   .hero-title em { white-space: normal; }
   .hero-mobile-break { display: block; }
   .hero-sub { font-size: 14px; max-width: 100%; line-height: 1.7; margin-bottom: 30px; }
+  .dietary-badge { font-size: 9px; line-height: 1.35; letter-spacing: .1em; }
   .hero-actions { flex-direction: column; align-items: flex-start; gap: 12px; }
   .hero-actions a { width: 100%; max-width: none; justify-content: center; }
 
@@ -1111,11 +1191,19 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
   }
 
   /* About */
-  .about { padding: 72px 0 96px; }
+  .about { padding: 56px 0 88px; }
   .about-inner { grid-template-columns: 1fr; gap: 40px; padding: 0 24px; }
-  .about-img-wrap { order: -1; }
-  .about-badge { left: -8px; bottom: -16px; width: 130px; }
-  .about-badge-num { font-size: 38px; }
+  .about-img-wrap { order: -1; padding-right: 14px; padding-bottom: 34px; }
+  .about-img-wrap::before { top: 14px; left: 14px; }
+  .about-badge {
+    left: 14px; bottom: 0;
+    width: auto; max-width: calc(100% - 42px);
+    display: flex; align-items: center; gap: 14px;
+    padding: 13px 16px 14px;
+    box-shadow: 0 14px 32px rgba(27, 56, 41, 0.14);
+  }
+  .about-badge-num { font-size: 34px; }
+  .about-badge-text { max-width: 168px; margin-top: 0; font-size: 9px; line-height: 1.35; letter-spacing: .08em; }
   .about-hours { flex-direction: column; gap: 16px; }
 
   /* Menu teaser */
@@ -1171,6 +1259,8 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
   .menu-tabs { gap: 0; margin-bottom: 40px; }
   .menu-tab { padding: 12px 18px; font-size: 10px; }
   .menu-items { grid-template-columns: 1fr; }
+  .menu-item { padding: 20px; }
+  .menu-item-price { max-width: 38%; font-size: 16px; }
   .menu-item { padding: 20px 20px; }
   .menu-item-name { font-size: 17px; }
 
@@ -1215,11 +1305,6 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
 </head>
 <body>
 
-<!-- Proposal Banner -->
-<div class="proposal-banner">
-  <span>Design Proposal Demo 3</span> — Limoncello · Since 2014 · Brand copy refresh · Mobile-first · ACF-ready
-</div>
-
 <!-- Mobile Menu Overlay -->
 <div class="mobile-menu" id="mobileMenu">
   <a href="#page-home">Home</a>
@@ -1239,7 +1324,7 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
 
 <!-- ════ NAV ════ -->
 <nav class="nav" id="mainNav">
-  <div class="nav-logo">Limoncello<span>.</span></div>
+  <a href="#page-home" class="nav-logo" aria-label="Limoncello home"><img src="wp-content/uploads/2026/05/limoncello-logo-nav-sharp-transparent.png" alt="Limoncello Restaurant & Pizzeria"></a>
   <ul class="nav-links">
     <li><a href="#page-home" class="active">Home</a></li>
     <li><a href="#page-menu">Menu</a></li>
@@ -1276,7 +1361,7 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
   <div class="hero-content">
     <div class="hero-eyebrow">Đà Nẵng · Vietnam</div>
     <h1 class="hero-title">Italian warmth.<br><em>Served in <span class="hero-mobile-break">Đà Nẵng.</span></em></h1>
-    <p class="hero-sub">Handmade pizza, fresh pasta, imported Italian ingredients, and warm hospitality in Đà Nẵng since 2014.</p>
+    <p class="hero-sub">Handmade pizza, fresh eggs pasta, imported Italian ingredients, and warm hospitality in Da Nang since 2014.</p>
     <div class="hero-actions">
       <a href="#page-menu" class="btn-primary">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
@@ -1289,7 +1374,7 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
     </div>
   </div>
   <div class="hero-bar">
-    <div class="hero-bar-item"><div class="hero-bar-lbl">Hours</div><div class="hero-bar-val">11AM – 10PM</div></div>
+    <div class="hero-bar-item"><div class="hero-bar-lbl">Hours</div><div class="hero-bar-val">11.30 AM – 10 PM</div></div>
     <div class="hero-bar-item"><div class="hero-bar-lbl">Every day</div><div class="hero-bar-val">Mon – Sun</div></div>
     <div class="hero-bar-item"><div class="hero-bar-lbl">Booking</div><div class="hero-bar-val">Google Reserve</div></div>
   </div>
@@ -1303,14 +1388,14 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
       <h2 class="heading">Since 2014,<br>at the table.</h2>
       <p class="about-body">Since opening in Đà Nẵng in 2014, Limoncello has stayed close to the rituals that make Italian dining feel generous: dough prepared by hand, pasta rolled fresh, sauces given time, and ingredients chosen with care. It is familiar, unhurried, and made for sharing.</p>
       <div class="about-hours">
-        <div><div class="about-hours-day">Open daily</div><div class="about-hours-time">11:00 AM – 10:00 PM</div></div>
-        <div><div class="about-hours-day">Kitchen closes</div><div class="about-hours-time">9:30 PM</div></div>
+        <div><div class="about-hours-day">Open daily</div><div class="about-hours-time">11.30 AM – 10.00 PM</div></div>
+        <div><div class="about-hours-day">Location</div><div class="about-hours-time">212 Tran Phu</div></div>
       </div>
       <a href="#page-about" class="btn-text">Read Our Story</a>
     </div>
     <div class="about-img-wrap reveal" style="transition-delay:.15s">
-      <img class="about-img-main" src="wp-content/uploads/2022/09/IMG_1067-scaled.jpg" alt="Limoncello restaurant interior" onerror="this.outerHTML='<div class=\'about-img-main\'>Restaurant interior photo</div>'">
-      <div class="about-badge"><div class="about-badge-num">2014</div><div class="about-badge-text">Serving Italian Dining in Đà Nẵng</div></div>
+      <img class="about-img-main" src="wp-content/uploads/2026/05/limoncello-storefront-about.jpg" alt="Limoncello restaurant storefront in Đà Nẵng" onerror="this.outerHTML='<div class=\'about-img-main\'>Restaurant exterior photo</div>'">
+      <div class="about-badge"><div class="about-badge-num">2014</div><div class="about-badge-text">Italian Dining in <span class="text-nowrap">Đà Nẵng</span></div></div>
     </div>
   </div>
 </section>
@@ -1341,7 +1426,7 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
           </svg>
         </div>
         <div class="menu-cat-name">Pizza</div>
-        <div class="menu-cat-desc">Hand-prepared dough, San Marzano tomatoes, and mozzarella baked for a crisp, generous bite.</div>
+        <div class="menu-cat-desc">Hand-prepared dough, 36 hours maturation, San Marzano tomatoes and mozzarella baked for a crisp, generous bite.</div>
       </div>
       <!-- Pasta — fork & swirl -->
       <div class="menu-cat reveal" style="transition-delay:.08s">
@@ -1355,7 +1440,7 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
           </svg>
         </div>
         <div class="menu-cat-name">Pasta</div>
-        <div class="menu-cat-desc">Fresh pasta, simple sauces, and slow-cooked ragù made for a proper Italian meal.</div>
+        <div class="menu-cat-desc">Fresh eggs pasta, simple sauces, and slow-cooked ragu made for a proper Italian meal.</div>
       </div>
       <!-- Antipasti — leaf/platter -->
       <div class="menu-cat reveal" style="transition-delay:.16s">
@@ -1409,8 +1494,8 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
 
   <div class="photo-grid">
     <div class="photo-cell tall loading">
-      <img src="wp-content/uploads/2026/03/z6611401263097_90992c597c3158a69ba1840d4b9c1a28.jpg" alt="Limoncello atmosphere" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-      <div class="photo-placeholder" style="display:none">Restaurant atmosphere</div>
+      <img src="wp-content/uploads/2026/05/limoncello-ravioli-table.jpg" alt="Ravioli and wine at Limoncello" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="photo-placeholder" style="display:none">Ravioli table photo</div>
       <div class="photo-overlay"></div>
       <!-- Always-visible badge (static affordance) -->
       <div class="photo-ig-badge">
@@ -1419,28 +1504,28 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
       </div>
     </div>
     <div class="photo-cell loading">
-      <img src="wp-content/uploads/2026/03/z6611411097804_4f1f0f914a264698123202602919e76e.jpg" alt="Food" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-      <div class="photo-placeholder" style="display:none">Food photo</div>
+      <img src="wp-content/uploads/2026/05/limoncello-soup-service.jpg" alt="Soup being served at Limoncello" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="photo-placeholder" style="display:none">Soup service photo</div>
       <div class="photo-overlay"></div>
     </div>
     <div class="photo-cell loading">
-      <img src="wp-content/uploads/2026/03/z6611411205781_7e9c50432b19aea49380e95f46c8bdff.jpg" alt="Food" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-      <div class="photo-placeholder" style="display:none">Food photo</div>
+      <img src="wp-content/uploads/2026/05/limoncello-tagliatelle-ragu.jpg" alt="Tagliatelle ragu at Limoncello" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="photo-placeholder" style="display:none">Tagliatelle photo</div>
       <div class="photo-overlay"></div>
     </div>
     <div class="photo-cell loading">
-      <img src="wp-content/uploads/2026/03/z6611401318147_b8461cd237a862b5acc21f34f0c87f15.jpg" alt="Atmosphere" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-      <div class="photo-placeholder" style="display:none">Atmosphere</div>
+      <img src="wp-content/uploads/2026/05/limoncello-fresh-pasta-prep.jpg" alt="Fresh pasta preparation at Limoncello" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="photo-placeholder" style="display:none">Fresh pasta preparation</div>
       <div class="photo-overlay"></div>
     </div>
     <div class="photo-cell loading">
-      <img src="wp-content/uploads/2026/03/z6611401272404_09224ad3d87a849055f47a89384a34f8.jpg" alt="Food" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-      <div class="photo-placeholder" style="display:none">Food photo</div>
+      <img src="wp-content/uploads/2026/05/limoncello-tiramisu.jpg" alt="Tiramisu dessert at Limoncello" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="photo-placeholder" style="display:none">Tiramisu photo</div>
       <div class="photo-overlay"></div>
     </div>
     <div class="photo-cell loading">
-      <img src="wp-content/uploads/2026/03/z6611401271738_ef19e986940c8217e4da4dd62af75444.jpg" alt="Food" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-      <div class="photo-placeholder" style="display:none">Food photo</div>
+      <img src="wp-content/uploads/2026/05/limoncello-interior-brick.jpg" alt="Limoncello dining room with brick wall and lemon decor" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="photo-placeholder" style="display:none">Dining room photo</div>
       <div class="photo-overlay"></div>
     </div>
     <a href="https://www.instagram.com/limoncello__danang/" class="photo-cell graphic-tile" title="Share your moment on Instagram">
@@ -1509,7 +1594,7 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
 <footer class="footer">
   <div class="footer-inner">
     <div>
-      <div class="footer-logo">Limoncello.</div>
+      <div class="footer-logo"><img src="wp-content/uploads/2026/05/limoncello-logo-sharp-transparent.png" alt="Limoncello Restaurant & Pizzeria"></div>
       <p class="footer-tag">Italian food, generous hospitality, and shared tables in the heart of Đà Nẵng since 2014.</p>
       <div class="footer-social">
         <a href="https://www.facebook.com/limoncellovn/" title="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
@@ -1529,10 +1614,10 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
     <div class="footer-info">
       <div class="footer-col-title">Visit Us</div>
       <p><strong>Address</strong><br>
-        <a href="https://maps.google.com/?q=Limoncello+Restaurant+Da+Nang" target="_blank" class="footer-info-val" style="text-decoration:underline;text-underline-offset:3px;text-decoration-color:rgba(255,255,255,.25);transition:text-decoration-color .2s" onmouseover="this.style.textDecorationColor='var(--lemon)'" onmouseout="this.style.textDecorationColor='rgba(255,255,255,.25)'">Đà Nẵng, Vietnam ↗</a>
+        <a href="https://maps.google.com/?q=212+Tran+Phu+Hai+Chau+Da+Nang+Vietnam" target="_blank" class="footer-info-val" style="text-decoration:underline;text-underline-offset:3px;text-decoration-color:rgba(255,255,255,.25);transition:text-decoration-color .2s" onmouseover="this.style.textDecorationColor='var(--lemon)'" onmouseout="this.style.textDecorationColor='rgba(255,255,255,.25)'">212 Tran Phu Str., Hai Chau, Da Nang ↗</a>
       </p>
-      <p><strong>Hours</strong><br><span class="footer-info-val">Every day · 11AM – 10PM</span></p>
-      <p><span style="font-size:12px;color:rgba(255,255,255,.45)">Kitchen closes 9:30 PM</span></p>
+      <p><strong>Hours</strong><br><span class="footer-info-val">Every day · 11.30 AM – 10 PM</span></p>
+      <p><strong>Phone</strong><br><a class="footer-info-val" href="tel:+842363561064">+84 236 356 10 64</a></p>
       <a href="https://www.google.com/maps/reserve/v/dine/c/vnw1q-YBfnQ" class="footer-reserve-btn">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
         Secure Your Table
@@ -1541,7 +1626,7 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
     <div class="footer-map" aria-label="Limoncello location map">
       <iframe
         title="Limoncello Restaurant on Google Maps"
-        src="https://maps.google.com/maps?q=Limoncello%20Restaurant%20Da%20Nang&t=&z=15&ie=UTF8&iwloc=&output=embed"
+        src="https://maps.google.com/maps?q=212%20Tran%20Phu%20Hai%20Chau%20Da%20Nang%20Vietnam&t=&z=16&ie=UTF8&iwloc=&output=embed"
         loading="lazy"
         referrerpolicy="no-referrer-when-downgrade"></iframe>
       <div class="footer-map-fallback">
@@ -1549,12 +1634,12 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
           <strong>Find Limoncello</strong>
           <span>Open directions in Google Maps if the embedded map does not load.</span>
         </div>
-        <a href="https://maps.google.com/?q=Limoncello+Restaurant+Da+Nang" target="_blank" rel="noopener">Open Map</a>
+        <a href="https://maps.google.com/?q=212+Tran+Phu+Hai+Chau+Da+Nang+Vietnam" target="_blank" rel="noopener">Open Map</a>
       </div>
     </div>
   </div>
   <div class="footer-bottom">
-    <p>© 2026 Limoncello Restaurant · Đà Nẵng, Vietnam</p>
+    <p>© 2026 Limoncello Restaurant · 212 Tran Phu, Đà Nẵng</p>
     <p>Design by <a href="https://ludimedia.net">LudiMedia</a></p>
   </div>
 </footer>
@@ -1562,10 +1647,10 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
 <!-- ════════════════════════════
      MENU PAGE
 ════════════════════════════ -->
-<div class="page-break" id="page-menu">↓ &nbsp;<span>Menu Page</span>&nbsp; — &nbsp;/menu/&nbsp; ↓</div>
+<div class="section-anchor" id="page-menu"></div>
 
-<nav class="nav" style="position:relative;top:auto">
-  <div class="nav-logo">Limoncello<span>.</span></div>
+<nav class="nav section-nav" style="position:relative;top:auto">
+  <a href="#page-home" class="nav-logo" aria-label="Limoncello home"><img src="wp-content/uploads/2026/05/limoncello-logo-nav-sharp-transparent.png" alt="Limoncello Restaurant & Pizzeria"></a>
   <ul class="nav-links"><li><a href="#page-home">Home</a></li><li><a href="#page-menu" class="active">Menu</a></li><li><a href="#page-about">About</a></li><li><a href="#page-contact">Contact</a></li></ul>
   <div class="nav-right">
     <div class="nav-social">
@@ -1582,7 +1667,7 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
   <div class="menu-hero-content">
     <div class="label on-dark" style="margin-bottom:12px">Authentic Italian</div>
     <h1 class="menu-hero-title">Our <span>Menu</span>.</h1>
-    <p class="menu-hero-desc">Handmade pizza, fresh pasta, Italian antipasti, and seasonal plates made for lingering at the table.</p>
+    <p class="menu-hero-desc">Handmade pizza, fresh eggs pasta, Italian antipasti, and seasonal plates made for lingering at the table.</p>
   </div>
 </section>
 
@@ -1593,6 +1678,10 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
       <div>
         <div class="label">Browse Our Selection</div>
         <h2 class="heading" style="font-size:clamp(28px,4vw,44px)">À la Carte</h2>
+        <div class="dietary-badge on-light">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22 C12 22 5 15 5 8 C5 4.7 7.7 2 11 2 C14.3 2 17 4.7 17 8 C17 15 12 22 12 22 Z"/><path d="M12 22 C12 14 15 9 21 6"/></svg>
+          Gluten-free pasta available on request
+        </div>
       </div>
       <a href="https://www.google.com/maps/reserve/v/dine/c/vnw1q-YBfnQ" class="btn-primary" style="background:var(--green);color:var(--lemon)">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
@@ -1610,8 +1699,12 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
         <button class="menu-tab active" data-panel="antipasti" role="tab" id="tab-antipasti" aria-selected="true"  aria-controls="panel-antipasti" tabindex="0">Antipasti</button>
         <button class="menu-tab"        data-panel="pizza"     role="tab" id="tab-pizza"     aria-selected="false" aria-controls="panel-pizza"     tabindex="-1">Pizza</button>
         <button class="menu-tab"        data-panel="pasta"     role="tab" id="tab-pasta"     aria-selected="false" aria-controls="panel-pasta"     tabindex="-1">Pasta</button>
-        <button class="menu-tab"        data-panel="main"      role="tab" id="tab-main"      aria-selected="false" aria-controls="panel-main"      tabindex="-1">Main Course</button>
-        <button class="menu-tab"        data-panel="lunch"     role="tab" id="tab-lunch"     aria-selected="false" aria-controls="panel-lunch"     tabindex="-1">Lunch Combo</button>
+        <button class="menu-tab"        data-panel="risotto"   role="tab" id="tab-risotto"   aria-selected="false" aria-controls="panel-risotto"   tabindex="-1">Risotto</button>
+        <button class="menu-tab"        data-panel="main"      role="tab" id="tab-main"      aria-selected="false" aria-controls="panel-main"      tabindex="-1">Secondi</button>
+        <button class="menu-tab"        data-panel="salad"     role="tab" id="tab-salad"     aria-selected="false" aria-controls="panel-salad"     tabindex="-1">Salad &amp; Soup</button>
+        <button class="menu-tab"        data-panel="dolci"     role="tab" id="tab-dolci"     aria-selected="false" aria-controls="panel-dolci"     tabindex="-1">Dolci</button>
+        <button class="menu-tab"        data-panel="drinks"    role="tab" id="tab-drinks"    aria-selected="false" aria-controls="panel-drinks"    tabindex="-1">Drinks</button>
+        <button class="menu-tab"        data-panel="lunch"     role="tab" id="tab-lunch"     aria-selected="false" aria-controls="panel-lunch"     tabindex="-1">Set Lunch</button>
       </div>
     </div>
 
@@ -1622,12 +1715,13 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
         <div><div class="menu-cat-title">Antipasti</div><div class="menu-cat-subtitle">Starters to share</div></div>
       </div>
       <div class="menu-items">
-        <div class="menu-item signature"><div class="menu-item-info"><div class="menu-item-name"><span class="sig-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="8" cy="8.5" rx="5.5" ry="4"/><path d="M8 4.5 C9.2 2.8 11.8 3 13 4"/><path d="M8 12.5 C6.8 14.2 4.2 14 3 13"/><path d="M5.5 8.5 Q8 6.5 10.5 8.5"/></svg></span>Bruschetta al Pomodoro</div><div class="menu-item-desc">Grilled sourdough, fresh tomato, basil, extra virgin olive oil</div></div><div class="menu-item-price">89,000₫</div></div>
-        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Carpaccio di Manzo</div><div class="menu-item-desc">Thinly sliced beef, arugula, parmesan shavings, capers</div></div><div class="menu-item-price">165,000₫</div></div>
-        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Insalata Caprese</div><div class="menu-item-desc">Fresh mozzarella, heirloom tomatoes, basil, balsamic glaze</div></div><div class="menu-item-price">125,000₫</div></div>
-        <div class="menu-item signature"><div class="menu-item-info"><div class="menu-item-name"><span class="sig-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="8" cy="8.5" rx="5.5" ry="4"/><path d="M8 4.5 C9.2 2.8 11.8 3 13 4"/><path d="M8 12.5 C6.8 14.2 4.2 14 3 13"/><path d="M5.5 8.5 Q8 6.5 10.5 8.5"/></svg></span>Tagliere Misto</div><div class="menu-item-desc">Selection of Italian cold cuts, aged cheeses, pickles, house bread</div></div><div class="menu-item-price">195,000₫</div></div>
-        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Zuppa del Giorno</div><div class="menu-item-desc">Chef's soup of the day</div></div><div class="menu-item-price">65,000₫</div></div>
-        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Calamari Fritti</div><div class="menu-item-desc">Crispy fried squid, marinara dipping sauce, lemon</div></div><div class="menu-item-price">145,000₫</div></div>
+        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Fritto di Calamari e Gamberi</div><div class="menu-item-desc">Deep fried squid &amp; shrimps</div></div><div class="menu-item-price">195,000₫</div></div>
+        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Carpaccio di Manzo</div><div class="menu-item-desc">Slices of raw beef fillet, sundried tomatoes, Parmesan flakes &amp; lemon dressing</div></div><div class="menu-item-price">225,000₫</div></div>
+        <div class="menu-item signature"><div class="menu-item-info"><div class="menu-item-name"><span class="sig-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="8" cy="8.5" rx="5.5" ry="4"/><path d="M8 4.5 C9.2 2.8 11.8 3 13 4"/><path d="M8 12.5 C6.8 14.2 4.2 14 3 13"/><path d="M5.5 8.5 Q8 6.5 10.5 8.5"/></svg></span>Focaccia al Rosmarino</div><div class="menu-item-desc">Flat pizza bread with rosemary &amp; olive oil</div></div><div class="menu-item-price">95,000₫</div></div>
+        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Antipasto di Terra</div><div class="menu-item-desc">Assorted Italian cold cuts, Parmesan cheese, gorgonzola, grilled vegetables &amp; rosemary bread</div></div><div class="menu-item-price">455,000₫</div></div>
+        <div class="menu-item signature"><div class="menu-item-info"><div class="menu-item-name"><span class="sig-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="8" cy="8.5" rx="5.5" ry="4"/><path d="M8 4.5 C9.2 2.8 11.8 3 13 4"/><path d="M8 12.5 C6.8 14.2 4.2 14 3 13"/><path d="M5.5 8.5 Q8 6.5 10.5 8.5"/></svg></span>Bruschette</div><div class="menu-item-desc">Italian grilled toast with tomatoes &amp; olives cream, or pesto &amp; mozzarella</div></div><div class="menu-item-price">75,000₫</div></div>
+        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Tartare di Salmone e Mango</div><div class="menu-item-desc">Fresh salmon tartare, fresh mango cubes &amp; lemon dressing</div></div><div class="menu-item-price">245,000₫</div></div>
+        <div class="menu-item signature"><div class="menu-item-info"><div class="menu-item-name"><span class="sig-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="8" cy="8.5" rx="5.5" ry="4"/><path d="M8 4.5 C9.2 2.8 11.8 3 13 4"/><path d="M8 12.5 C6.8 14.2 4.2 14 3 13"/><path d="M5.5 8.5 Q8 6.5 10.5 8.5"/></svg></span>Caprese</div><div class="menu-item-desc">Fresh mozzarella, sliced tomatoes, oregano</div></div><div class="menu-item-price">185,000₫</div></div>
       </div>
     </div>
 
@@ -1637,13 +1731,23 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
         <div class="menu-cat-icon-lg"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="24" cy="24" r="20"/><line x1="24" y1="4" x2="24" y2="44"/><line x1="6.4" y1="14" x2="41.6" y2="34"/><line x1="6.4" y1="34" x2="41.6" y2="14"/><circle cx="16" cy="20" r="2.5" fill="currentColor" stroke="none"/><circle cx="28" cy="30" r="2.5" fill="currentColor" stroke="none"/></svg></div>
         <div><div class="menu-cat-title">Pizza</div><div class="menu-cat-subtitle">Handmade · Italian style</div></div>
       </div>
+      <p class="menu-panel-note">X-Large: 40cm · Regular: 30cm. Pizzas are topped with homemade tomato sauce &amp; imported mozzarella cheese. Cream base items have no tomato sauce.</p>
       <div class="menu-items">
-        <div class="menu-item signature"><div class="menu-item-info"><div class="menu-item-name"><span class="sig-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="8" cy="8.5" rx="5.5" ry="4"/><path d="M8 4.5 C9.2 2.8 11.8 3 13 4"/><path d="M8 12.5 C6.8 14.2 4.2 14 3 13"/><path d="M5.5 8.5 Q8 6.5 10.5 8.5"/></svg></span>Margherita Classica</div><div class="menu-item-desc">San Marzano tomato, fior di latte mozzarella, fresh basil, olive oil</div></div><div class="menu-item-price">165,000₫</div></div>
-        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Quattro Formaggi</div><div class="menu-item-desc">Mozzarella, gorgonzola, parmesan, fontina, honey drizzle</div></div><div class="menu-item-price">185,000₫</div></div>
-        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Diavola</div><div class="menu-item-desc">Tomato, mozzarella, spicy salami, chili flakes, olive oil</div></div><div class="menu-item-price">175,000₫</div></div>
-        <div class="menu-item signature"><div class="menu-item-info"><div class="menu-item-name"><span class="sig-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="8" cy="8.5" rx="5.5" ry="4"/><path d="M8 4.5 C9.2 2.8 11.8 3 13 4"/><path d="M8 12.5 C6.8 14.2 4.2 14 3 13"/><path d="M5.5 8.5 Q8 6.5 10.5 8.5"/></svg></span>Limoncello Bianca</div><div class="menu-item-desc">White base, ricotta, zucchini, lemon zest, mint — our signature</div></div><div class="menu-item-price">195,000₫</div></div>
-        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Prosciutto e Rucola</div><div class="menu-item-desc">Tomato, mozzarella, Parma ham, arugula, parmesan</div></div><div class="menu-item-price">195,000₫</div></div>
-        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Funghi e Tartufo</div><div class="menu-item-desc">White base, mixed mushrooms, truffle oil, parmesan, thyme</div></div><div class="menu-item-price">215,000₫</div></div>
+        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Margherita</div><div class="menu-item-desc">Tomato sauce &amp; shredded mozzarella</div></div><div class="menu-item-price">XL 275 / R 165</div></div>
+        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Napoli</div><div class="menu-item-desc">Capers, olive &amp; anchovies</div></div><div class="menu-item-price">XL 335 / R 215</div></div>
+        <div class="menu-item signature"><div class="menu-item-info"><div class="menu-item-name"><span class="sig-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="8" cy="8.5" rx="5.5" ry="4"/><path d="M8 4.5 C9.2 2.8 11.8 3 13 4"/><path d="M8 12.5 C6.8 14.2 4.2 14 3 13"/><path d="M5.5 8.5 Q8 6.5 10.5 8.5"/></svg></span>Quattro Formaggi</div><div class="menu-item-desc">Four cheese: mozzarella, parmesan, gorgonzola, brie</div></div><div class="menu-item-price">XL 375 / R 265</div></div>
+        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Capricciosa</div><div class="menu-item-desc">Artichoke, olives, mushrooms &amp; ham</div></div><div class="menu-item-price">XL 335 / R 225</div></div>
+        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Prosciutto e Funghi</div><div class="menu-item-desc">Ham &amp; mushrooms</div></div><div class="menu-item-price">XL 315 / R 195</div></div>
+        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Frutti di Mare</div><div class="menu-item-desc">Seafood pizza: shrimps, squids &amp; clams</div></div><div class="menu-item-price">XL 375 / R 255</div></div>
+        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Salamino Piccante</div><div class="menu-item-desc">Spicy Italian salami</div></div><div class="menu-item-price">XL 335 / R 215</div></div>
+        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Rustica</div><div class="menu-item-desc">Homemade sausages, spicy salami, ham, bacon</div></div><div class="menu-item-price">XL 375 / R 265</div></div>
+        <div class="menu-item signature"><div class="menu-item-info"><div class="menu-item-name"><span class="sig-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="8" cy="8.5" rx="5.5" ry="4"/><path d="M8 4.5 C9.2 2.8 11.8 3 13 4"/><path d="M8 12.5 C6.8 14.2 4.2 14 3 13"/><path d="M5.5 8.5 Q8 6.5 10.5 8.5"/></svg></span>Vegetariana</div><div class="menu-item-desc">Seasonal vegetables</div></div><div class="menu-item-price">XL 315 / R 195</div></div>
+        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Regina</div><div class="menu-item-desc">Pizza Margherita with extra fresh mozzarella cheese &amp; cherry tomatoes. Add Parma ham: XL 455 / R 335</div></div><div class="menu-item-price">XL 395 / R 265</div></div>
+        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Crudo e Parmigiano</div><div class="menu-item-desc">Sliced Parma ham &amp; parmesan cheese</div></div><div class="menu-item-price">XL 375 / R 255</div></div>
+        <div class="menu-item signature"><div class="menu-item-info"><div class="menu-item-name"><span class="sig-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="8" cy="8.5" rx="5.5" ry="4"/><path d="M8 4.5 C9.2 2.8 11.8 3 13 4"/><path d="M8 12.5 C6.8 14.2 4.2 14 3 13"/><path d="M5.5 8.5 Q8 6.5 10.5 8.5"/></svg></span>Limoncello</div><div class="menu-item-desc">Homemade sausages, potato &amp; rosemary</div></div><div class="menu-item-price">XL 355 / R 235</div></div>
+        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Tartufata Speck</div><div class="menu-item-desc">Porcini mushrooms, black truffle sauce &amp; speck</div></div><div class="menu-item-price">XL 385 / R 275</div></div>
+        <div class="menu-item signature"><div class="menu-item-info"><div class="menu-item-name"><span class="sig-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="8" cy="8.5" rx="5.5" ry="4"/><path d="M8 4.5 C9.2 2.8 11.8 3 13 4"/><path d="M8 12.5 C6.8 14.2 4.2 14 3 13"/><path d="M5.5 8.5 Q8 6.5 10.5 8.5"/></svg></span>Tartufata Brie</div><div class="menu-item-desc">Porcini mushrooms, black truffle sauce &amp; brie</div></div><div class="menu-item-price">XL 385 / R 275</div></div>
+        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Giant Calzone</div><div class="menu-item-desc">Mozzarella, ham &amp; mushrooms</div></div><div class="menu-item-price">245,000₫</div></div>
       </div>
     </div>
 
@@ -1651,15 +1755,46 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
     <div class="menu-panel" id="panel-pasta" role="tabpanel" aria-labelledby="tab-pasta">
       <div class="menu-cat-header">
         <div class="menu-cat-icon-lg"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M24 8 C24 8 18 14 18 22 C18 30 24 34 24 42"/><path d="M24 8 C24 8 30 14 30 22 C30 30 24 34 24 42"/><path d="M16 10 C16 10 12 14 14 20"/><path d="M32 10 C32 10 36 14 34 20"/><ellipse cx="24" cy="26" rx="10" ry="6"/></svg></div>
-        <div><div class="menu-cat-title">Pasta</div><div class="menu-cat-subtitle">Fresh-made daily</div></div>
+        <div><div class="menu-cat-title">Pasta</div><div class="menu-cat-subtitle">Fresh eggs pasta</div></div>
+      </div>
+      <p class="menu-panel-note">Gluten-free pasta available upon request, additional 25,000₫ due to ingredient cost.</p>
+      <div class="menu-items">
+        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Spaghetti alla Bolognese</div><div class="menu-item-desc">Spaghetti tossed with Bolognese minced meat sauce (Ragu)</div></div><div class="menu-item-price">195,000₫</div></div>
+        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Linguine alle Vongole</div><div class="menu-item-desc">Flat spaghetti with fresh local clams, garlic, parsley</div></div><div class="menu-item-price">195,000₫</div></div>
+        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Spaghetti allo Scoglio</div><div class="menu-item-desc">Mixed seafood, saute garlic, cherry tomatoes &amp; parsley</div></div><div class="menu-item-price">245,000₫</div></div>
+        <div class="menu-item signature"><div class="menu-item-info"><div class="menu-item-name"><span class="sig-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="8" cy="8.5" rx="5.5" ry="4"/><path d="M8 4.5 C9.2 2.8 11.8 3 13 4"/><path d="M8 12.5 C6.8 14.2 4.2 14 3 13"/><path d="M5.5 8.5 Q8 6.5 10.5 8.5"/></svg></span>Linguine al Pesto</div><div class="menu-item-desc">Flat spaghetti with traditional homemade basil sauce from Liguria</div></div><div class="menu-item-price">195,000₫</div></div>
+        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Penne ai Quattro Formaggi</div><div class="menu-item-desc">Penne pasta with four cheese sauce: mozzarella, parmesan, gorgonzola, brie</div></div><div class="menu-item-price">245,000₫</div></div>
+        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Spaghetti Pomodoro e Basilico</div><div class="menu-item-desc">Spaghetti with tomato sauce &amp; fresh basil</div></div><div class="menu-item-price">165,000₫</div></div>
+        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Spaghetti alla Carbonara</div><div class="menu-item-desc">Crispy bacon, egg, parmesan cheese</div></div><div class="menu-item-price">195,000₫</div></div>
+        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Linguine Gamberi e Zucchine</div><div class="menu-item-desc">Flat spaghetti with shrimp and zucchini with cream &amp; tomato sauce</div></div><div class="menu-item-price">225,000₫</div></div>
+        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Penne Amatriciana</div><div class="menu-item-desc">Penne with bacon, onion, chilli &amp; tomato sauce</div></div><div class="menu-item-price">195,000₫</div></div>
+        <div class="menu-item signature"><div class="menu-item-info"><div class="menu-item-name"><span class="sig-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="8" cy="8.5" rx="5.5" ry="4"/><path d="M8 4.5 C9.2 2.8 11.8 3 13 4"/><path d="M8 12.5 C6.8 14.2 4.2 14 3 13"/><path d="M5.5 8.5 Q8 6.5 10.5 8.5"/></svg></span>Spaghetti dello Chef</div><div class="menu-item-desc">Aglio &amp; Olio spaghetti with sundried tomatoes, black olives &amp; capers</div></div><div class="menu-item-price">195,000₫</div></div>
+        <div class="menu-item signature"><div class="menu-item-info"><div class="menu-item-name"><span class="sig-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="8" cy="8.5" rx="5.5" ry="4"/><path d="M8 4.5 C9.2 2.8 11.8 3 13 4"/><path d="M8 12.5 C6.8 14.2 4.2 14 3 13"/><path d="M5.5 8.5 Q8 6.5 10.5 8.5"/></svg></span>Penne all'Arrabbiata</div><div class="menu-item-desc">Short pasta with tomato sauce, chilli &amp; garlic</div></div><div class="menu-item-price">165,000₫</div></div>
+        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Tagliatelle al Salmone</div><div class="menu-item-desc">Salmon, tomato sauce &amp; cream</div></div><div class="menu-item-price">245,000₫</div></div>
+        <div class="menu-item signature"><div class="menu-item-info"><div class="menu-item-name"><span class="sig-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="8" cy="8.5" rx="5.5" ry="4"/><path d="M8 4.5 C9.2 2.8 11.8 3 13 4"/><path d="M8 12.5 C6.8 14.2 4.2 14 3 13"/><path d="M5.5 8.5 Q8 6.5 10.5 8.5"/></svg></span>Gnocchi al Gorgonzola</div><div class="menu-item-desc">Potato dumpling with gorgonzola cheese</div></div><div class="menu-item-price">245,000₫</div></div>
+        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Tortelli di Carne</div><div class="menu-item-desc">Tortelli stuffed with pork meat, tomato sauce, spring onion &amp; smoked ham Speck</div></div><div class="menu-item-price">255,000₫</div></div>
+        <div class="menu-item signature"><div class="menu-item-info"><div class="menu-item-name"><span class="sig-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="8" cy="8.5" rx="5.5" ry="4"/><path d="M8 4.5 C9.2 2.8 11.8 3 13 4"/><path d="M8 12.5 C6.8 14.2 4.2 14 3 13"/><path d="M5.5 8.5 Q8 6.5 10.5 8.5"/></svg></span>Gnocchi alla Sorrentina</div><div class="menu-item-desc">Potato dumpling with tomato sauce and mozzarella cheese</div></div><div class="menu-item-price">215,000₫</div></div>
+        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Tortelli Prosciutto e Piselli</div><div class="menu-item-desc">Tortelli stuffed with pork meat, ham, cream &amp; green peas</div></div><div class="menu-item-price">235,000₫</div></div>
+        <div class="menu-item signature"><div class="menu-item-info"><div class="menu-item-name"><span class="sig-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="8" cy="8.5" rx="5.5" ry="4"/><path d="M8 4.5 C9.2 2.8 11.8 3 13 4"/><path d="M8 12.5 C6.8 14.2 4.2 14 3 13"/><path d="M5.5 8.5 Q8 6.5 10.5 8.5"/></svg></span>Ravioli Ricotta e Spinaci</div><div class="menu-item-desc">Ravioli with fresh ricotta cheese, spinach, with walnuts or tomato sauce</div></div><div class="menu-item-price">245,000₫</div></div>
+        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Lasagne Classiche</div><div class="menu-item-desc">Traditional oven baked pasta with beef Bolognese ragu, Parmesan &amp; mozzarella</div></div><div class="menu-item-price">235,000₫</div></div>
+        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Tagliatelle Salsiccia e Funghi</div><div class="menu-item-desc">Housemade sausage with mushrooms, tomato sauce &amp; cream</div></div><div class="menu-item-price">235,000₫</div></div>
+        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Tagliatelle al Ragu d'Anatra</div><div class="menu-item-desc">Home made tagliatelle tossed with duck ragu sauce</div></div><div class="menu-item-price">235,000₫</div></div>
+      </div>
+    </div>
+
+    <!-- RISOTTO -->
+    <div class="menu-panel" id="panel-risotto" role="tabpanel" aria-labelledby="tab-risotto">
+      <div class="menu-cat-header">
+        <div class="menu-cat-icon-lg"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="24" cy="26" rx="17" ry="10"/><path d="M10 24 C14 32 34 32 38 24"/><circle cx="19" cy="23" r="1"/><circle cx="24" cy="27" r="1"/><circle cx="29" cy="23" r="1"/></svg></div>
+        <div><div class="menu-cat-title">Risotto &amp; Contorni</div><div class="menu-cat-subtitle">Italian rice · 25 min preparation</div></div>
       </div>
       <div class="menu-items">
-        <div class="menu-item signature"><div class="menu-item-info"><div class="menu-item-name"><span class="sig-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="8" cy="8.5" rx="5.5" ry="4"/><path d="M8 4.5 C9.2 2.8 11.8 3 13 4"/><path d="M8 12.5 C6.8 14.2 4.2 14 3 13"/><path d="M5.5 8.5 Q8 6.5 10.5 8.5"/></svg></span>Cacio e Pepe</div><div class="menu-item-desc">Tonnarelli, pecorino romano, black pepper, olive oil — Roman classic</div></div><div class="menu-item-price">155,000₫</div></div>
-        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Carbonara</div><div class="menu-item-desc">Spaghetti, guanciale, egg yolk, pecorino, black pepper</div></div><div class="menu-item-price">165,000₫</div></div>
-        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Penne all'Arrabbiata</div><div class="menu-item-desc">Penne, spicy San Marzano tomato sauce, garlic, parsley</div></div><div class="menu-item-price">145,000₫</div></div>
-        <div class="menu-item signature"><div class="menu-item-info"><div class="menu-item-name"><span class="sig-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="8" cy="8.5" rx="5.5" ry="4"/><path d="M8 4.5 C9.2 2.8 11.8 3 13 4"/><path d="M8 12.5 C6.8 14.2 4.2 14 3 13"/><path d="M5.5 8.5 Q8 6.5 10.5 8.5"/></svg></span>Tagliatelle al Ragù</div><div class="menu-item-desc">Fresh tagliatelle, slow-braised Bolognese, parmesan — 6-hour ragu</div></div><div class="menu-item-price">175,000₫</div></div>
-        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Linguine alle Vongole</div><div class="menu-item-desc">Linguine, clams, white wine, garlic, parsley, chili</div></div><div class="menu-item-price">185,000₫</div></div>
-        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Pesto Genovese</div><div class="menu-item-desc">Trofie pasta, basil pesto, green beans, potato, parmesan</div></div><div class="menu-item-price">155,000₫</div></div>
+        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Risotto alla Zucca con Pancetta e Rosmarino</div><div class="menu-item-desc">Italian rice cooked with pumpkin cream, crispy bacon &amp; rosemary</div></div><div class="menu-item-price">245,000₫</div></div>
+        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Risotto alla Pescatora</div><div class="menu-item-desc">Italian rice with seafood: shrimps, squids &amp; clams</div></div><div class="menu-item-price">265,000₫</div></div>
+        <div class="menu-item signature"><div class="menu-item-info"><div class="menu-item-name"><span class="sig-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="8" cy="8.5" rx="5.5" ry="4"/><path d="M8 4.5 C9.2 2.8 11.8 3 13 4"/><path d="M8 12.5 C6.8 14.2 4.2 14 3 13"/><path d="M5.5 8.5 Q8 6.5 10.5 8.5"/></svg></span>Risotto Funghi e Tartufo</div><div class="menu-item-desc">Porcini mushrooms &amp; truffle cream sauce</div></div><div class="menu-item-price">275,000₫</div></div>
+        <div class="menu-item signature"><div class="menu-item-info"><div class="menu-item-name"><span class="sig-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="8" cy="8.5" rx="5.5" ry="4"/><path d="M8 4.5 C9.2 2.8 11.8 3 13 4"/><path d="M8 12.5 C6.8 14.2 4.2 14 3 13"/><path d="M5.5 8.5 Q8 6.5 10.5 8.5"/></svg></span>Risotto alla Barbabietola con Crema di Formaggio</div><div class="menu-item-desc">Beetroot sauce &amp; parmesan cream sauce</div></div><div class="menu-item-price">245,000₫</div></div>
+        <div class="menu-item signature"><div class="menu-item-info"><div class="menu-item-name"><span class="sig-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="8" cy="8.5" rx="5.5" ry="4"/><path d="M8 4.5 C9.2 2.8 11.8 3 13 4"/><path d="M8 12.5 C6.8 14.2 4.2 14 3 13"/><path d="M5.5 8.5 Q8 6.5 10.5 8.5"/></svg></span>Verdure alla Griglia</div><div class="menu-item-desc">Grilled seasonal vegetables</div></div><div class="menu-item-price">95,000₫</div></div>
+        <div class="menu-item signature"><div class="menu-item-info"><div class="menu-item-name"><span class="sig-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="8" cy="8.5" rx="5.5" ry="4"/><path d="M8 4.5 C9.2 2.8 11.8 3 13 4"/><path d="M8 12.5 C6.8 14.2 4.2 14 3 13"/><path d="M5.5 8.5 Q8 6.5 10.5 8.5"/></svg></span>Patate Saltate</div><div class="menu-item-desc">Sauteed potatoes with rosemary</div></div><div class="menu-item-price">95,000₫</div></div>
       </div>
     </div>
 
@@ -1667,13 +1802,71 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
     <div class="menu-panel" id="panel-main" role="tabpanel" aria-labelledby="tab-main">
       <div class="menu-cat-header">
         <div class="menu-cat-icon-lg"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="24" cy="24" r="16"/><line x1="18" y1="10" x2="18" y2="38"/><path d="M14 10 L14 20 C14 23 18 24 18 24"/><path d="M22 10 L22 20 C22 23 18 24 18 24"/><line x1="30" y1="10" x2="30" y2="18"/><path d="M27 18 C27 22 33 22 33 18 L33 10"/><line x1="30" y1="22" x2="30" y2="38"/></svg></div>
-        <div><div class="menu-cat-title">Main Course</div><div class="menu-cat-subtitle">Grilled meats &amp; seafood</div></div>
+        <div><div class="menu-cat-title">Secondi</div><div class="menu-cat-subtitle">Served with chef-style vegetables</div></div>
       </div>
       <div class="menu-items">
-        <div class="menu-item signature"><div class="menu-item-info"><div class="menu-item-name"><span class="sig-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="8" cy="8.5" rx="5.5" ry="4"/><path d="M8 4.5 C9.2 2.8 11.8 3 13 4"/><path d="M8 12.5 C6.8 14.2 4.2 14 3 13"/><path d="M5.5 8.5 Q8 6.5 10.5 8.5"/></svg></span>Branzino al Forno</div><div class="menu-item-desc">Whole baked sea bass, capers, olives, cherry tomato, herb oil</div></div><div class="menu-item-price">295,000₫</div></div>
-        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Pollo alla Parmigiana</div><div class="menu-item-desc">Breaded chicken, tomato sauce, mozzarella, basil, served with salad</div></div><div class="menu-item-price">215,000₫</div></div>
-        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Bistecca alla Griglia</div><div class="menu-item-desc">Grilled beef steak, rosemary butter, roasted potatoes, greens</div></div><div class="menu-item-price">345,000₫</div></div>
-        <div class="menu-item signature"><div class="menu-item-info"><div class="menu-item-name"><span class="sig-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="8" cy="8.5" rx="5.5" ry="4"/><path d="M8 4.5 C9.2 2.8 11.8 3 13 4"/><path d="M8 12.5 C6.8 14.2 4.2 14 3 13"/><path d="M5.5 8.5 Q8 6.5 10.5 8.5"/></svg></span>Saltimbocca alla Romana</div><div class="menu-item-desc">Veal escalope, prosciutto, sage, white wine — traditional Roman dish</div></div><div class="menu-item-price">265,000₫</div></div>
+        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Spigola al Cartoccio</div><div class="menu-item-desc">Seabass fillet cooked in aluminium foil with veggies</div></div><div class="menu-item-price">345,000₫</div></div>
+        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Salmone alla Griglia</div><div class="menu-item-desc">Grilled imported salmon fillet</div></div><div class="menu-item-price">455,000₫</div></div>
+        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Spigola alla Mediterranea</div><div class="menu-item-desc">Seabass fillet braised in tomato sauce, olive &amp; capers</div></div><div class="menu-item-price">325,000₫</div></div>
+        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Tagliata di Manzo (300gr)</div><div class="menu-item-desc">Australian black Angus ribeye with pepper or mushroom sauce of your choice</div></div><div class="menu-item-price">725,000₫</div></div>
+        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Scaloppine ai Funghi e Grana</div><div class="menu-item-desc">Chicken escalopes cooked with mushrooms and Parmesan cheese in a creamy sauce</div></div><div class="menu-item-price">315,000₫</div></div>
+        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Involtini di Pollo</div><div class="menu-item-desc">White wine braised chicken rolls with Parma ham and mozzarella</div></div><div class="menu-item-price">335,000₫</div></div>
+      </div>
+    </div>
+
+    <!-- SALAD & SOUP -->
+    <div class="menu-panel" id="panel-salad" role="tabpanel" aria-labelledby="tab-salad">
+      <div class="menu-cat-header">
+        <div class="menu-cat-icon-lg"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 26 C10 38 38 38 40 26"/><path d="M10 24 C14 16 34 16 38 24"/><path d="M18 20 C16 15 19 10 24 8 C29 10 32 15 30 20"/><path d="M24 9 L24 24"/></svg></div>
+        <div><div class="menu-cat-title">Salad &amp; Soup</div><div class="menu-cat-subtitle">Bright starters and warm bowls</div></div>
+      </div>
+      <p class="menu-panel-note">Salads are served with a signature dressing, olive oil and balsamic vinegar.</p>
+      <div class="menu-items">
+        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Insalata Limoncello</div><div class="menu-item-desc">Mixed salad with chicken, eggs, bacon, parmesan &amp; crouton</div></div><div class="menu-item-price">185,000₫</div></div>
+        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Insalata della Casa</div><div class="menu-item-desc">Chef style salad with Parmesan cheese, Parma ham</div></div><div class="menu-item-price">185,000₫</div></div>
+        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Insalata di Mare</div><div class="menu-item-desc">Salad with mixed seafood, celery, fennel, cucumber &amp; citrus dressing</div></div><div class="menu-item-price">195,000₫</div></div>
+        <div class="menu-item signature"><div class="menu-item-info"><div class="menu-item-name"><span class="sig-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="8" cy="8.5" rx="5.5" ry="4"/><path d="M8 4.5 C9.2 2.8 11.8 3 13 4"/><path d="M8 12.5 C6.8 14.2 4.2 14 3 13"/><path d="M5.5 8.5 Q8 6.5 10.5 8.5"/></svg></span>Insalata Greca</div><div class="menu-item-desc">Mixed salad with black olives &amp; feta goat cheese</div></div><div class="menu-item-price">175,000₫</div></div>
+        <div class="menu-item signature"><div class="menu-item-info"><div class="menu-item-name"><span class="sig-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="8" cy="8.5" rx="5.5" ry="4"/><path d="M8 4.5 C9.2 2.8 11.8 3 13 4"/><path d="M8 12.5 C6.8 14.2 4.2 14 3 13"/><path d="M5.5 8.5 Q8 6.5 10.5 8.5"/></svg></span>Insalata Mista</div><div class="menu-item-desc">The best from the garden, mixed salad</div></div><div class="menu-item-price">115,000₫</div></div>
+        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Insalata Siciliana</div><div class="menu-item-desc">Lettuce, green beans, tomatoes, chunks of tuna, potatoes, black olives</div></div><div class="menu-item-price">175,000₫</div></div>
+        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Insalata di Polpo</div><div class="menu-item-desc">Octopus &amp; potatoes salad with black olives, sundried tomatoes &amp; capers</div></div><div class="menu-item-price">195,000₫</div></div>
+        <div class="menu-item signature"><div class="menu-item-info"><div class="menu-item-name"><span class="sig-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="8" cy="8.5" rx="5.5" ry="4"/><path d="M8 4.5 C9.2 2.8 11.8 3 13 4"/><path d="M8 12.5 C6.8 14.2 4.2 14 3 13"/><path d="M5.5 8.5 Q8 6.5 10.5 8.5"/></svg></span>Minestrone</div><div class="menu-item-desc">Traditional Italian soup full of healthy vegetables</div></div><div class="menu-item-price">135,000₫</div></div>
+        <div class="menu-item signature"><div class="menu-item-info"><div class="menu-item-name"><span class="sig-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="8" cy="8.5" rx="5.5" ry="4"/><path d="M8 4.5 C9.2 2.8 11.8 3 13 4"/><path d="M8 12.5 C6.8 14.2 4.2 14 3 13"/><path d="M5.5 8.5 Q8 6.5 10.5 8.5"/></svg></span>Crema di Zucca e Patate</div><div class="menu-item-desc">Pumpkin &amp; potato soup served with croutons</div></div><div class="menu-item-price">135,000₫</div></div>
+        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Zuppetta di Mare</div><div class="menu-item-desc">Mixed seafood soup with fish stock &amp; herbs</div></div><div class="menu-item-price">235,000₫</div></div>
+      </div>
+    </div>
+
+    <!-- DOLCI -->
+    <div class="menu-panel" id="panel-dolci" role="tabpanel" aria-labelledby="tab-dolci">
+      <div class="menu-cat-header">
+        <div class="menu-cat-icon-lg"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 28 H36"/><path d="M15 28 L18 40 H30 L33 28"/><path d="M16 24 C18 14 30 14 32 24"/><path d="M18 21 C22 25 27 16 31 21"/></svg></div>
+        <div><div class="menu-cat-title">Dolci</div><div class="menu-cat-subtitle">Desserts, gelato &amp; Italian coffee</div></div>
+      </div>
+      <p class="menu-panel-note">All desserts are freshly made in-house.</p>
+      <div class="menu-items">
+        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Tiramisú</div><div class="menu-item-desc">Mascarpone cheese, Savoiardi biscuits &amp; Espresso coffee</div></div><div class="menu-item-price">125,000₫</div></div>
+        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Affogato al Caffè</div><div class="menu-item-desc">Vanilla ice cream &amp; dark Espresso coffee</div></div><div class="menu-item-price">125,000₫</div></div>
+        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Affogato al Baileys</div><div class="menu-item-desc">Vanilla ice cream topped with Baileys liqueur</div></div><div class="menu-item-price">125,000₫</div></div>
+        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Panna Cotta</div><div class="menu-item-desc">Silky panna cotta with your choice of caramel or chocolate sauce</div></div><div class="menu-item-price">125,000₫</div></div>
+        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Strudel alle Mele con Gelato alla Vaniglia</div><div class="menu-item-desc">Apple strudel with raisin, walnuts &amp; vanilla ice cream</div></div><div class="menu-item-price">125,000₫</div></div>
+        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Semifreddo al Limoncello</div><div class="menu-item-desc">Chilled cream parfait with Limoncello liqueur</div></div><div class="menu-item-price">125,000₫</div></div>
+        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Gelato Italia</div><div class="menu-item-desc">Strawberry, chocolate, coconut, hazelnut, vanilla, lime</div></div><div class="menu-item-price">1 scoop 45 / 2 scoops 80 / 3 scoops 110</div></div>
+        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Italian Coffee</div><div class="menu-item-desc">Espresso 45 · Macchiato 50 · Double 60 · Americano 45 · Cappuccino 65 · Caffelatte 65 · Espresso corretto 75</div></div><div class="menu-item-price">45-75</div></div>
+      </div>
+    </div>
+
+    <!-- DRINKS -->
+    <div class="menu-panel" id="panel-drinks" role="tabpanel" aria-labelledby="tab-drinks">
+      <div class="menu-cat-header">
+        <div class="menu-cat-icon-lg"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 8 H34 L30 42 H18 Z"/><path d="M17 18 H31"/><path d="M20 42 H28"/><path d="M34 10 L40 18"/></svg></div>
+        <div><div class="menu-cat-title">Drinks</div><div class="menu-cat-subtitle">Soft drinks, beers, spirits &amp; aperitifs</div></div>
+      </div>
+      <div class="menu-items">
+        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Soft Drinks</div><div class="menu-item-desc">Mineral water 0.5L 25 · 1.5L 40 · Sparkling water 25 · Sprite / Fanta 35 · Coca / Tonic / Diet Coke 35 · Orange / Lemon juice fresh 45 · San Pellegrino water 95</div></div><div class="menu-item-price">25-95</div></div>
+        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Beers</div><div class="menu-item-desc">Saigon 40 · Tiger 45 · Heineken 50 · Special craft beer subject to availability</div></div><div class="menu-item-price">40-50</div></div>
+        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Spirits</div><div class="menu-item-desc">Vietnamese vodka / rum 75 · Smirnoff / Gordon's Gin / J&amp;B 95 · Baileys / Bacardi Rum 95 · Captain Morgan / Johnnie Walker 95 · Jack Daniel's 125 · Martell 150</div></div><div class="menu-item-price">75-150</div></div>
+        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Digestivo</div><div class="menu-item-desc">Amaro / Sambuca 95 · Grappa 125</div></div><div class="menu-item-price">95-125</div></div>
+        <div class="menu-item signature"><div class="menu-item-info"><div class="menu-item-name"><span class="sig-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="8" cy="8.5" rx="5.5" ry="4"/><path d="M8 4.5 C9.2 2.8 11.8 3 13 4"/><path d="M8 12.5 C6.8 14.2 4.2 14 3 13"/><path d="M5.5 8.5 Q8 6.5 10.5 8.5"/></svg></span>Limoncello Liqueur</div><div class="menu-item-desc">Homemade Italian liqueur made from lemon zest. Fresh and fragrant, perfect to end the meal or use in desserts and creams.</div></div><div class="menu-item-price">95,000₫</div></div>
+        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Aperitifs</div><div class="menu-item-desc">Martini white/red 95 · Campari 95 · Negroni 135 · Aperol Spritz 135 · Campari Spritz 135 · Limoncello Spritz 135</div></div><div class="menu-item-price">95-135</div></div>
       </div>
     </div>
 
@@ -1681,17 +1874,18 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
     <div class="menu-panel" id="panel-lunch" role="tabpanel" aria-labelledby="tab-lunch">
       <div class="menu-cat-header">
         <div class="menu-cat-icon-lg"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="14" width="32" height="24" rx="3"/><path d="M16 14 V10 A8 8 0 0 1 32 10 V14"/><line x1="24" y1="22" x2="24" y2="30"/><line x1="20" y1="26" x2="28" y2="26"/></svg></div>
-        <div><div class="menu-cat-title">Lunch Combo</div><div class="menu-cat-subtitle">Available 11AM – 2PM daily</div></div>
+        <div><div class="menu-cat-title">Set Lunch</div><div class="menu-cat-subtitle">Every day · 11:00 – 15:00</div></div>
       </div>
+      <p class="menu-panel-note">Pick your favourite Italian dishes for a delicious two-course lunch, complete with a soft drink.</p>
       <div class="menu-items">
-        <div class="menu-item signature"><div class="menu-item-info"><div class="menu-item-name"><span class="sig-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="8" cy="8.5" rx="5.5" ry="4"/><path d="M8 4.5 C9.2 2.8 11.8 3 13 4"/><path d="M8 12.5 C6.8 14.2 4.2 14 3 13"/><path d="M5.5 8.5 Q8 6.5 10.5 8.5"/></svg></span>Combo A — Pizza Set</div><div class="menu-item-desc">Choice of pizza + house salad + soft drink</div></div><div class="menu-item-price">199,000₫</div></div>
-        <div class="menu-item signature"><div class="menu-item-info"><div class="menu-item-name"><span class="sig-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="8" cy="8.5" rx="5.5" ry="4"/><path d="M8 4.5 C9.2 2.8 11.8 3 13 4"/><path d="M8 12.5 C6.8 14.2 4.2 14 3 13"/><path d="M5.5 8.5 Q8 6.5 10.5 8.5"/></svg></span>Combo B — Pasta Set</div><div class="menu-item-desc">Choice of pasta + soup of the day + soft drink</div></div><div class="menu-item-price">199,000₫</div></div>
-        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Combo C — Business Lunch</div><div class="menu-item-desc">Antipasto + pasta or pizza + dessert of the day + coffee</div></div><div class="menu-item-price">269,000₫</div></div>
-        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Combo D — Light Lunch</div><div class="menu-item-desc">Insalata Caprese + Bruschetta + soft drink</div></div><div class="menu-item-price">149,000₫</div></div>
+        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Step 1 — Choose One Starter</div><div class="menu-item-desc">Bruschetta with tomatoes &amp; basil, tomato soup with ginger, or mixed salad</div></div><div class="menu-item-price">Included</div></div>
+        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Step 2 — Choose One Main</div><div class="menu-item-desc">Penne Amatriciana, Spaghetti Carbonara, or Spaghetti Pomodoro</div></div><div class="menu-item-price">Included</div></div>
+        <div class="menu-item signature"><div class="menu-item-info"><div class="menu-item-name"><span class="sig-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="8" cy="8.5" rx="5.5" ry="4"/><path d="M8 4.5 C9.2 2.8 11.8 3 13 4"/><path d="M8 12.5 C6.8 14.2 4.2 14 3 13"/><path d="M5.5 8.5 Q8 6.5 10.5 8.5"/></svg></span>Set Lunch Special</div><div class="menu-item-desc">One starter, one main, and one soft drink included in all combos</div></div><div class="menu-item-price">245,000₫</div></div>
+        <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Soft Drink</div><div class="menu-item-desc">Choose 1 accompanying drink: Coca-Cola, Sprite, Fanta, or mineral water</div></div><div class="menu-item-price">Included</div></div>
       </div>
     </div>
 
-    <p style="margin-top:32px;font-size:12px;color:var(--text-muted);text-align:center;letter-spacing:.06em">● Signature dishes &nbsp;·&nbsp; All prices include VAT &nbsp;·&nbsp; Menu may change seasonally</p>
+    <p style="margin-top:32px;font-size:12px;color:var(--text-muted);text-align:center;letter-spacing:.06em">● Vegetarian or signature highlights &nbsp;·&nbsp; Prices shown in 1,000 VND unless otherwise noted &nbsp;·&nbsp; Menu may change seasonally</p>
   </div>
 </section>
 
@@ -1712,10 +1906,10 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
 <!-- ════════════════════════════
      ABOUT PAGE
 ════════════════════════════ -->
-<div class="page-break" id="page-about">↓ &nbsp;<span>About Page</span>&nbsp; — &nbsp;/about-us/&nbsp; ↓</div>
+<div class="section-anchor" id="page-about"></div>
 
-<nav class="nav" style="position:relative;top:auto">
-  <div class="nav-logo">Limoncello<span>.</span></div>
+<nav class="nav section-nav" style="position:relative;top:auto">
+  <a href="#page-home" class="nav-logo" aria-label="Limoncello home"><img src="wp-content/uploads/2026/05/limoncello-logo-nav-sharp-transparent.png" alt="Limoncello Restaurant & Pizzeria"></a>
   <ul class="nav-links"><li><a href="#page-home">Home</a></li><li><a href="#page-menu">Menu</a></li><li><a href="#page-about" class="active">About</a></li><li><a href="#page-contact">Contact</a></li></ul>
   <div class="nav-right">
     <div class="nav-social">
@@ -1783,10 +1977,10 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
 <!-- ════════════════════════════
      CONTACT PAGE
 ════════════════════════════ -->
-<div class="page-break" id="page-contact">↓ &nbsp;<span>Contact Page</span>&nbsp; — &nbsp;/contact/&nbsp; ↓</div>
+<div class="section-anchor" id="page-contact"></div>
 
-<nav class="nav" style="position:relative;top:auto">
-  <div class="nav-logo">Limoncello<span>.</span></div>
+<nav class="nav section-nav" style="position:relative;top:auto">
+  <a href="#page-home" class="nav-logo" aria-label="Limoncello home"><img src="wp-content/uploads/2026/05/limoncello-logo-nav-sharp-transparent.png" alt="Limoncello Restaurant & Pizzeria"></a>
   <ul class="nav-links"><li><a href="#page-home">Home</a></li><li><a href="#page-menu">Menu</a></li><li><a href="#page-about">About</a></li><li><a href="#page-contact" class="active">Contact</a></li></ul>
   <div class="nav-right">
     <div class="nav-social">
@@ -1811,12 +2005,12 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
       <!-- Phone — tap-to-call on mobile -->
       <div class="contact-info-block">
         <div class="contact-info-label">Phone</div>
-        <a href="tel:+84XXXXXXXXX" style="display:inline-flex;align-items:center;gap:10px;margin-top:4px;text-decoration:none">
-          <span class="contact-info-value" style="border-bottom:2px solid var(--lemon);padding-bottom:2px;transition:color .2s" onmouseover="this.style.color='var(--lemon-deep)'" onmouseout="this.style.color=''">+84 XX XXX XXXX</span>
+        <a href="tel:+842363561064" style="display:inline-flex;align-items:center;gap:10px;margin-top:4px;text-decoration:none">
+          <span class="contact-info-value" style="border-bottom:2px solid var(--lemon);padding-bottom:2px;transition:color .2s" onmouseover="this.style.color='var(--lemon-deep)'" onmouseout="this.style.color=''">+84 236 356 10 64</span>
         </a>
         <!-- Mobile-only tap-to-call button -->
         <div class="tap-call-btn">
-          <a href="tel:+84XXXXXXXXX">
+          <a href="tel:+842363561064">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.38 2 2 0 0 1 3.58 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.96a16 16 0 0 0 6.29 6.29l1.42-1.42a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
             Call the Restaurant
           </a>
@@ -1827,10 +2021,10 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
       <!-- Address — tap-to-navigate -->
       <div class="contact-info-block">
         <div class="contact-info-label">Address</div>
-        <div class="contact-info-value">Đà Nẵng, Vietnam</div>
+        <div class="contact-info-value">212 Tran Phu Str., Hai Chau, Da Nang</div>
         <div class="contact-info-sub">Open the map for directions to the restaurant</div>
         <!-- Tap-to-navigate: opens Google Maps / Apple Maps -->
-        <a href="https://maps.google.com/?q=Limoncello+Restaurant+Da+Nang" target="_blank" class="tap-nav-btn">
+        <a href="https://maps.google.com/?q=212+Tran+Phu+Hai+Chau+Da+Nang+Vietnam" target="_blank" class="tap-nav-btn">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
           Open Directions
         </a>
@@ -1839,8 +2033,8 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
       <!-- Hours -->
       <div class="contact-info-block">
         <div class="contact-info-label">Hours</div>
-        <div class="contact-info-value">11:00 AM – 10:00 PM</div>
-        <div class="contact-info-sub">Open every day · Kitchen closes 9:30 PM</div>
+        <div class="contact-info-value">11.30 AM – 10.00 PM</div>
+        <div class="contact-info-sub">Open every day</div>
       </div>
 
       <!-- Reserve -->
@@ -1863,50 +2057,19 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
         </div>
       </div>
 
-      <div class="contact-map-placeholder">Google Maps Embed<br><small style="font-size:13px">(iframe trong WordPress)</small></div>
     </div>
-    <div>
-      <div class="contact-form-wrap">
-        <div class="contact-form-title">Send us a message</div>
-        <div class="contact-form-sub">Questions, celebrations, group bookings — tell us what you are planning.</div>
-        <!-- Fix #2: Proper Form UI Component — defines visual spec for Dev -->
-        <form class="contact-form" onsubmit="return false" novalidate>
-          <div class="contact-form-row">
-            <!-- Floating label: input first, label second, placeholder=" " -->
-            <div class="contact-form-field contact-form-float">
-              <input type="text" id="cf-name" class="contact-form-input" placeholder=" " autocomplete="name">
-              <label class="contact-form-label" for="cf-name">Name</label>
-            </div>
-            <!-- Demo: error state on email field -->
-            <div class="contact-form-field contact-form-float is-error">
-              <input type="email" id="cf-email" class="contact-form-input" placeholder=" " autocomplete="email" value="not-an-email">
-              <label class="contact-form-label" for="cf-email">Email</label>
-              <div class="contact-form-error-msg">
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                Please enter a valid email address
-              </div>
-            </div>
-          </div>
-          <div class="contact-form-field contact-form-float">
-            <input type="tel" id="cf-phone" class="contact-form-input" placeholder=" " autocomplete="tel">
-            <label class="contact-form-label" for="cf-phone">Phone <span style="font-weight:400;font-size:10px;opacity:.6">(optional)</span></label>
-          </div>
-          <div class="contact-form-field contact-form-float">
-            <input type="text" id="cf-subject" class="contact-form-input" placeholder=" ">
-            <label class="contact-form-label" for="cf-subject">Subject</label>
-          </div>
-          <div class="contact-form-field contact-form-float">
-            <textarea id="cf-msg" class="contact-form-textarea" placeholder=" "></textarea>
-            <label class="contact-form-label" for="cf-msg">Message</label>
-          </div>
-          <button type="submit" class="btn-primary" style="width:100%;justify-content:center;padding:16px 24px;font-size:12px;letter-spacing:.18em">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-            Send My Message
-          </button>
-        </form>
-        <div class="form-spec-note">
-          <p><strong>Dev note:</strong> WPForms / CF7 shortcode replaces this markup. Child theme CSS overrides ensure: <strong>1.5px border → var(--lemon) on focus</strong>, 48px min-height inputs (touch target), submit inherits <code>.btn-primary</code> style.</p>
+    <div class="contact-map" aria-label="Limoncello location map">
+      <iframe
+        title="Limoncello Restaurant on Google Maps"
+        src="https://maps.google.com/maps?q=212%20Tran%20Phu%20Hai%20Chau%20Da%20Nang%20Vietnam&t=&z=16&ie=UTF8&iwloc=&output=embed"
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"></iframe>
+      <div class="contact-map-caption">
+        <div>
+          <strong>Find Limoncello</strong>
+          <span>Open directions in Google Maps if the embedded map does not load.</span>
         </div>
+        <a href="https://maps.google.com/?q=212+Tran+Phu+Hai+Chau+Da+Nang+Vietnam" target="_blank" rel="noopener">Open Map</a>
       </div>
     </div>
   </div>
